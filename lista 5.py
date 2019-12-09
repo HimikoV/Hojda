@@ -1,4 +1,4 @@
-""" 
+"""
 DODAŁEM OBROT CUBE'a PRZY UZYCIU TEJ FUNKCJI Z LISTY 4
 
 
@@ -93,54 +93,68 @@ def create_mvp(width, height):
     mvp = model @ view @ projection
     return mvp.astype(np.float32)
 
+
 # utworzenie okna
 glutInit(sys.argv)
 glutInitWindowPosition(int((ctypes.windll.user32.GetSystemMetrics(0) - windowWidth) / 2),
                        int((ctypes.windll.user32.GetSystemMetrics(1) - windowHeight) / 2))
 glutInitWindowSize(windowWidth, windowHeight)
 glutCreateWindow(b"PyOpenGL")
+
+
 # # macierz punktów
 # punkty = [-1.0, 0.0, 1.0,
 #           1.0, 0.0, 1.0,
 #           0.0, 1.0, 1.0]
 
-def cube(mousex,mousey,size,kat):
-    punkty = [mousex + size, mousey + size, 1.0 - size,  # front upper right
-            mousex - size, mousey + size, 1.0 - size,  # front upper left
-            mousex - size, mousey + size, 1.0 + size,  # back upper left
-            mousex + size, mousey + size, 1.0 + size,  # back upper right
-            mousex - size, mousey + size, 1.0 + size,  # back upper left
-            mousex + size, mousey + size, 1.0 + size,  # back upper right
-            mousex + size, mousey - size, 1.0 + size,  # back lower right
-            mousex - size, mousey - size, 1.0 + size,  # back lower left
-            mousex + size, mousey - size, 1.0 + size,  # back lower right
-            mousex - size, mousey - size, 1.0 + size,  # back lower left
-            mousex - size, mousey - size, 1.0 - size,  # front lower left
-            mousex + size, mousey - size, 1.0 - size,  # fron lower right
-            mousex + size, mousey - size, 1.0 - size,  # front lower right
-            mousex - size, mousey - size, 1.0 - size,  # front lower left
-            mousex - size, mousey + size, 1.0 - size,  # front upper left
-            mousex + size, mousey + size, 1.0 - size,  # front upper right
-            mousex + size, mousey + size, 1.0 - size,  # front upper right
-            mousex + size, mousey - size, 1.0 - size,  # front lower right
-            mousex + size, mousey - size, 1.0 + size,  # back lower right
-            mousex + size, mousey + size, 1.0 + size,  # back upper right
-            mousex - size, mousey + size, 1.0 - size,  # front upper left
-            mousex - size, mousey - size, 1.0 - size,  # front lower left
-            mousex - size, mousey - size, 1.0 + size,  # back lower left
-            mousex - size, mousey + size, 1.0 + size]  # back upper left
+def cube(mousex, mousey, size, kat):
+    punkty = [mousex + size, mousey - size, 1.0 - size,
+              mousex - size, mousey - size, 1.0 - size,
+              mousex - size, mousey + size, 1.0 - size,
+              mousex - size, mousey + size, 1.0 - size,
+              mousex + size, mousey + size, 1.0 - size,
+              mousex + size, mousey - size, 1.0 - size,
+              mousex + size, mousey + size, 1.0 - size,
+              mousex + size, mousey - size, 1.0 - size,
+              mousex + size, mousey + size, 1.0 + size,
+              mousex + size, mousey - size, 1.0 - size,
+              mousex + size, mousey - size, 1.0 + size,
+              mousex + size, mousey + size, 1.0 + size,
+              mousex - size, mousey - size, 1.0 - size,
+              mousex - size, mousey + size, 1.0 - size,
+              mousex - size, mousey - size, 1.0 + size,
+              mousex - size, mousey + size, 1.0 - size,
+              mousex - size, mousey - size, 1.0 + size,
+              mousex - size, mousey + size, 1.0 + size,
+              mousex - size, mousey - size, 1.0 + size,
+              mousex - size, mousey + size, 1.0 + size,
+              mousex + size, mousey + size, 1.0 + size,
+              mousex - size, mousey - size, 1.0 + size,
+              mousex + size, mousey - size, 1.0 + size,
+              mousex + size, mousey + size, 1.0 + size,
+              mousex - size, mousey + size, 1.0 - size,
+              mousex - size, mousey + size, 1.0 + size,
+              mousey + size, mousey + size, 1.0 + size,
+              mousex - size, mousey + size, 1.0 - size,
+              mousex + size, mousey + size, 1.0 + size,
+              mousex + size, mousey + size, 1.0 - size,
+              mousex - size, mousey - size, 1.0 - size,
+              mousex - size, mousey - size, 1.0 + size,
+              mousey + size, mousey - size, 1.0 + size,
+              mousex - size, mousey - size, 1.0 - size,
+              mousex + size, mousey - size, 1.0 + size,
+              mousex + size, mousey - size, 1.0 - size,]
 
-    p0 = [1,1,2]
+    p0 = [0,0,0]
     wersor = [1,1,1]
-    punkty1 = []
-    for i in range(12):
-        xd = obrot_zad_2(p0, wersor, [punkty[i],punkty[i+1],punkty[i+2]], kat).tolist()
-        punkty1.append(xd[0])
-        punkty1.append(xd[1])
-        punkty1.append(xd[2])
-        i+=3
+    lel = []
+    for i in range(36):
+        xd = obrot_zad_2(p0, wersor, (punkty[i],punkty[i+1],punkty[i+2]), kat).tolist()
+        lel.append(xd[0])
+        lel.append(xd[1])
+        lel.append(xd[2])
+    return lel
 
-    return punkty1
 
 def obrot_zad_2(p0, wektor, punkt, kat):
     jednostkowy = np.sqrt(wektor[0] ** 2 + wektor[1] ** 2 + wektor[2] ** 2)
@@ -161,43 +175,44 @@ def obrot_zad_2(p0, wektor, punkt, kat):
     return punkt
 
 
+
 zplus = 0.0
-kolory = [0.583,  0.771,  0.014,
-    0.609,  0.115,  0.436,
-    0.327,  0.483,  0.844,
-    0.822,  0.569,  0.201,
-    0.435,  0.602,  0.223,
-    0.310,  0.747,  0.185,
-    0.597,  0.770,  0.761,
-    0.559,  0.436,  0.730,
-    0.359,  0.583,  0.152,
-    0.483,  0.596,  0.789,
-    0.559,  0.861,  0.639,
-    0.195,  0.548,  0.859,
-    0.014,  0.184,  0.576,
-    0.771,  0.328,  0.970,
-    0.406,  0.615,  0.116,
-    0.676,  0.977,  0.133,
-    0.971,  0.572,  0.833,
-    0.140,  0.616,  0.489,
-    0.997,  0.513,  0.064,
-    0.945,  0.719,  0.592,
-    0.543,  0.021,  0.978,
-    0.279,  0.317,  0.505,
-    0.167,  0.620,  0.077,
-    0.347,  0.857,  0.137,
-    0.055,  0.953,  0.042,
-    0.714,  0.505,  0.345,
-    0.783,  0.290,  0.734,
-    0.722,  0.645,  0.174,
-    0.302,  0.455,  0.848,
-    0.225,  0.587,  0.040,
-    0.517,  0.713,  0.338,
-    0.053,  0.959,  0.120,
-    0.393,  0.621,  0.362,
-    0.673,  0.211,  0.457,
-    0.820,  0.883,  0.371,
-    0.982,  0.099,  0.879]
+kolory = [0.583, 0.771, 0.014,
+          0.609, 0.115, 0.436,
+          0.327, 0.483, 0.844,
+          0.822, 0.569, 0.201,
+          0.435, 0.602, 0.223,
+          0.310, 0.747, 0.185,
+          0.597, 0.770, 0.761,
+          0.559, 0.436, 0.730,
+          0.359, 0.583, 0.152,
+          0.483, 0.596, 0.789,
+          0.559, 0.861, 0.639,
+          0.195, 0.548, 0.859,
+          0.014, 0.184, 0.576,
+          0.771, 0.328, 0.970,
+          0.406, 0.615, 0.116,
+          0.676, 0.977, 0.133,
+          0.971, 0.572, 0.833,
+          0.140, 0.616, 0.489,
+          0.997, 0.513, 0.064,
+          0.945, 0.719, 0.592,
+          0.543, 0.021, 0.978,
+          0.279, 0.317, 0.505,
+          0.167, 0.620, 0.077,
+          0.347, 0.857, 0.137,
+          0.055, 0.953, 0.042,
+          0.714, 0.505, 0.345,
+          0.783, 0.290, 0.734,
+          0.722, 0.645, 0.174,
+          0.302, 0.455, 0.848,
+          0.225, 0.587, 0.040,
+          0.517, 0.713, 0.338,
+          0.053, 0.959, 0.120,
+          0.393, 0.621, 0.362,
+          0.673, 0.211, 0.457,
+          0.820, 0.883, 0.371,
+          0.982, 0.099, 0.879]
 # shadery
 vs = compileShader(vsc, GL_VERTEX_SHADER)
 fs = compileShader(fsc, GL_FRAGMENT_SHADER)
@@ -214,10 +229,10 @@ kat = 0
 while True:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # czyszczenie sceny
     # modyfikacja trójkąta
-    #punkty[0] += 0.0001
+    # punkty[0] += 0.0001
     # model, widok, projekcja
-    #mvp = np.identity(4, float)
-    punkty1 = cube(1,1,0.5,kat)
+    # mvp = np.identity(4, float)
+    punkty1 = cube(1, 1, 0.5, kat)
     kat += 0.001
     mvp = create_mvp(windowWidth, windowHeight)
     mvploc = glGetUniformLocation(sp, "mvp")  # pobieranie nazwy z shadera
