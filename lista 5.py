@@ -145,11 +145,11 @@ def cube(mousex, mousey, size, kat):
               mousex + size, mousey - size, 1.0 + size,
               mousex + size, mousey - size, 1.0 - size,]
 
-    p0 = [0,0,0]
-    wersor = [1,1,1]
+    p0 = [mousex,mousey,1]
+    wersor = [12,41,11]
     lel = []
     for i in range(36):
-        xd = obrot_zad_2(p0, wersor, (punkty[i],punkty[i+1],punkty[i+2]), kat).tolist()
+        xd = obrot_zad_2(p0, wersor, (punkty[3 * i], punkty[3 * i + 1], punkty[3 * i + 2]), kat).tolist()
         lel.append(xd[0])
         lel.append(xd[1])
         lel.append(xd[2])
@@ -213,6 +213,7 @@ kolory = [0.583, 0.771, 0.014,
           0.673, 0.211, 0.457,
           0.820, 0.883, 0.371,
           0.982, 0.099, 0.879]
+
 # shadery
 vs = compileShader(vsc, GL_VERTEX_SHADER)
 fs = compileShader(fsc, GL_FRAGMENT_SHADER)
@@ -224,6 +225,7 @@ glUseProgram(sp)
 # przekazujemy dwa atrybuty do vertex shader-a; pozycję i kolor
 glEnableVertexAttribArray(0)
 glEnableVertexAttribArray(1)
+
 glutDisplayFunc(dummy)  # niewykorzystana
 kat = 0
 while True:
@@ -232,7 +234,10 @@ while True:
     # punkty[0] += 0.0001
     # model, widok, projekcja
     # mvp = np.identity(4, float)
-    punkty1 = cube(1, 1, 0.5, kat)
+    punkty1 = cube(1, 1, 0.2, kat)
+    punkty2 = cube(2, 2, 0.2, kat)
+    punkty3 = cube(3, 2, 0.2, kat)
+
     kat += 0.001
     mvp = create_mvp(windowWidth, windowHeight)
     mvploc = glGetUniformLocation(sp, "mvp")  # pobieranie nazwy z shadera
@@ -241,6 +246,13 @@ while True:
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, punkty1)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, kolory)
     glDrawArrays(GL_TRIANGLES, 0, 3 * 12)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, punkty2)
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, kolory)
+    glDrawArrays(GL_TRIANGLES, 0, 3 * 12)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, punkty3)
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, kolory)
+    glDrawArrays(GL_TRIANGLES, 0, 3 * 12)
+
     glutSwapBuffers()
     glFlush()
     glutMainLoopEvent()
