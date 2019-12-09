@@ -148,7 +148,7 @@ def paint():
     glRasterPos3f(0, 2,-2.4)
     for ch in text:
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, ctypes.c_int(ord(ch)))
-    text = f'Change color: k | Delete cube: l'
+    text = f'Change color: K | Delete cube: L'
     glColor3f(0, 0, 0)
     glRasterPos3f(0, 2,-2.3)
     for ch in text:
