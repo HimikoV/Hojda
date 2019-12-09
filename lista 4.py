@@ -13,7 +13,7 @@ clearColor = [0.0, 0.0, 0.0]
 pixelMapR = [[clearColor[0] for y in range(windowSize)] for x in range(windowSize)]
 pixelMapG = [[clearColor[1] for y in range(windowSize)] for x in range(windowSize)]
 pixelMapB = [[clearColor[2] for y in range(windowSize)] for x in range(windowSize)]
-qqqqqq
+
 
 class OP:  # parametry projekcji,
     l = -10
