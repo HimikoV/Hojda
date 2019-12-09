@@ -210,6 +210,8 @@ def color_cube(cube_select):
 def del_cube(cube_select):
     if cube_select <= 0:
         pass
+    elif cube_select > len(kordy):
+        pass
     else:
         kolorki = np.random.uniform(0,11)
         kordy[cube_select-1] = list(kordy[cube_select-1])
