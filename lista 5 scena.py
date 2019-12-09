@@ -98,43 +98,32 @@ glutCreateWindow(b"PyOpenGL")
 #           1.0, 0.0, 1.0,
 #           0.0, 1.0, 1.0]
 
-
-punkty = [-1.0, -1.0, -1.0,
-          -1.0, -1.0, 1.0,
-          -1.0, 1.0, 1.0,
-          1.0, 1.0, -1.0,
-          -1.0, -1.0, -1.0,
-          -1.0, 1.0, -1.0,
-          1.0, -1.0, 1.0,
-          -1.0, -1.0, -1.0,
-          1.0, -1.0, -1.0,
-          1.0, 1.0, -1.0,
-          1.0, -1.0, -1.0,
-          -1.0, -1.0, -1.0,
-          -1.0, -1.0, -1.0,
-          -1.0, 1.0, 1.0,
-          -1.0, 1.0, -1.0,
-          1.0, -1.0, 1.0,
-          -1.0, -1.0, 1.0,
-          -1.0, -1.0, -1.0,
-          -1.0, 1.0, 1.0,
-          -1.0, -1.0, 1.0,
-          1.0, -1.0, 1.0,
-          1.0, 1.0, 1.0,
-          1.0, -1.0, -1.0,
-          1.0, 1.0, -1.0,
-          1.0, -1.0, -1.0,
-          1.0, 1.0, 1.0,
-          1.0, -1.0, 1.0,
-          1.0, 1.0, 1.0,
-          1.0, 1.0, -1.0,
-          -1.0, 1.0, -1.0,
-          1.0, 1.0, 1.0,
-          -1.0, 1.0, -1.0,
-          -1.0, 1.0, 1.0,
-          1.0, 1.0, 1.0,
-          -1.0, 1.0, 1.0,
-          1.0, -1.0, 1.0]
+def cube(mousex,mousey,size):
+    punkty = [mousex + size, mousey + size, 1.0 - size,  # front upper right
+            mousex - size, mousey + size, 1.0 - size,  # front upper left
+            mousex - size, mousey + size, 1.0 + size,  # back upper left
+            mousex + size, mousey + size, 1.0 + size,  # back upper right
+            mousex - size, mousey + size, 1.0 + size,  # back upper left
+            mousex + size, mousey + size, 1.0 + size,  # back upper right
+            mousex + size, mousey - size, 1.0 + size,  # back lower right
+            mousex - size, mousey - size, 1.0 + size,  # back lower left
+            mousex + size, mousey - size, 1.0 + size,  # back lower right
+            mousex - size, mousey - size, 1.0 + size,  # back lower left
+            mousex - size, mousey - size, 1.0 - size,  # front lower left
+            mousex + size, mousey - size, 1.0 - size,  # fron lower right
+            mousex + size, mousey - size, 1.0 - size,  # front lower right
+            mousex - size, mousey - size, 1.0 - size,  # front lower left
+            mousex - size, mousey + size, 1.0 - size,  # front upper left
+            mousex + size, mousey + size, 1.0 - size,  # front upper right
+            mousex + size, mousey + size, 1.0 - size,  # front upper right
+            mousex + size, mousey - size, 1.0 - size,  # front lower right
+            mousex + size, mousey - size, 1.0 + size,  # back lower right
+            mousex + size, mousey + size, 1.0 + size,  # back upper right
+            mousex - size, mousey + size, 1.0 - size,  # front upper left
+            mousex - size, mousey - size, 1.0 - size,  # front lower left
+            mousex - size, mousey - size, 1.0 + size,  # back lower left
+            mousex - size, mousey + size, 1.0 + size]  # back upper left
+    return punkty
 
 zplus = 0.0
 kolory = [0.583,  0.771,  0.014,
@@ -188,14 +177,17 @@ glutDisplayFunc(dummy)  # niewykorzystana
 while True:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # czyszczenie sceny
     # modyfikacja trójkąta
-    punkty[0] += 0.0001
+    #punkty[0] += 0.0001
+    # for i in range(len(punkty)):
+    #     punkty[i] += 0.0001
     # model, widok, projekcja
     #mvp = np.identity(4, float)
     mvp = create_mvp(windowWidth, windowHeight)
     mvploc = glGetUniformLocation(sp, "mvp")  # pobieranie nazwy z shadera
     glUniformMatrix4fv(mvploc, 1, GL_FALSE, mvp)  # przekazywanie do shadera
     # ustawiamy pozycję i kolor
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, punkty)
+    punkty1 = cube(0,0,0.5)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, punkty1)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, kolory)
     glDrawArrays(GL_TRIANGLES, 0, 3 * 12)
     glutSwapBuffers()
