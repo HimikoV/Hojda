@@ -17,7 +17,7 @@ qqqqqq
 
 class OP:  # parametry projekcji,
     l = -10
-    r = 16k
+    r = 16
     b = -10
     t = 15
     n = 8
