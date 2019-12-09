@@ -87,47 +87,6 @@ def create_mvp(width, height):
     mvp = model @ view @ projection
     return mvp.astype(np.float32)
 
-
-def Cube(mousex, mousey, size):
-    global kej
-    glBegin(GL_QUADS)
-    glColor3f(0.5, 0, 0.5)
-    # upper right -> upper left -> lower left -> lower right
-    mousex = (windowWidth / 2 - mousex) / 130
-    mousey = -(windowHeight / 2 - mousey) / 20
-    """górna ściana"""
-    glVertex3f(mousex + size, mousey + size, 1.0 - size)  # front upper right
-    glVertex3f(mousex - size, mousey + size, 1.0 - size)  # front upper left
-    glVertex3f(mousex - size, mousey + size, 1.0 + size)  # back upper left
-    glVertex3f(mousex + size, mousey + size, 1.0 + size)  # back upper right
-    """tylnia ściana"""
-    glVertex3f(mousex - size, mousey + size, 1.0 + size)  # back upper left
-    glVertex3f(mousex + size, mousey + size, 1.0 + size)  # back upper right
-    glVertex3f(mousex + size, mousey - size, 1.0 + size)  # back lower right
-    glVertex3f(mousex - size, mousey - size, 1.0 + size)  # back lower left
-    """dolna ściana"""
-    glVertex3f(mousex + size, mousey - size, 1.0 + size)  # back lower right
-    glVertex3f(mousex - size, mousey - size, 1.0 + size)  # back lower left
-    glVertex3f(mousex - size, mousey - size, 1.0 - size)  # front lower left
-    glVertex3f(mousex + size, mousey - size, 1.0 - size)  # fron lower right
-    """przednia ściana"""
-    glVertex3f(mousex + size, mousey - size, 1.0 - size)  # front lower right
-    glVertex3f(mousex - size, mousey - size, 1.0 - size)  # front lower left
-    glVertex3f(mousex - size, mousey + size, 1.0 - size)  # front upper left
-    glVertex3f(mousex + size, mousey + size, 1.0 - size)  # front upper right
-    """lewa ściana"""
-    glVertex3f(mousex + size, mousey + size, 1.0 - size)  # front upper right
-    glVertex3f(mousex + size, mousey - size, 1.0 - size)  # front lower right
-    glVertex3f(mousex + size, mousey - size, 1.0 + size)  # back lower right
-    glVertex3f(mousex + size, mousey + size, 1.0 + size)  # back upper right
-    """prawa ściana"""
-    glVertex3f(mousex - size, mousey + size, 1.0 - size)  # front upper left
-    glVertex3f(mousex - size, mousey - size, 1.0 - size)  # front lower left
-    glVertex3f(mousex - size, mousey - size, 1.0 + size)  # back lower left
-    glVertex3f(mousex - size, mousey + size, 1.0 + size)  # back upper left
-    glEnd()
-
-
 # utworzenie okna
 glutInit(sys.argv)
 glutInitWindowPosition(int((ctypes.windll.user32.GetSystemMetrics(0) - windowWidth) / 2),
