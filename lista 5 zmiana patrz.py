@@ -13,6 +13,17 @@ import ctypes
 
 windowWidth = 800
 windowHeight = 600
+mousex=windowWidth/2
+mousey=windowHeight/2
+camx = 0.0
+camy = 0.0
+camz = -5.0
+lookx = 0.0
+looky = 0.0
+lookz = 5.0
+upx = 0.0
+upy = 1.0
+upz = 0.0
 # vertex shader - kod
 vsc = """
 #version 330 core
@@ -34,6 +45,15 @@ void main() {
 out_kolor = vec4(inter_kolor.xyzw);
 }
 """
+def mouseMotion(x, y):
+    global mousex, mousey
+    mousex = 0 if x < 0 else windowWidth if x > windowWidth else x
+    mousey = 0 if y < 0 else windowHeight if y > windowHeight else y
+    pass
+
+
+def mouseMouse(btn, stt, x, y):
+    pass
 
 
 def dummy():
@@ -215,6 +235,45 @@ kolory = [0.583, 0.771, 0.014,
           0.820, 0.883, 0.371,
           0.982, 0.099, 0.879]
 
+
+def keyboard(bkey, x, y):
+    global mousex
+    global lookz
+    global mousey
+    global kej
+    global cube_select
+    key = bkey.decode("utf-8")
+    if key == 'd':
+        mousex += 10
+    elif key == 'a':
+        mousex -= 10
+    elif key == 'w':
+        mousey += 5
+    elif key == 's':
+        mousey -= 5
+    elif key == '+':
+        if cube_select >= len(kordy):
+            pass
+        else:
+            cube_select += 1
+    elif key == '-':
+        if cube_select < 1:
+            pass
+        else:
+            cube_select -= 1
+    elif key == 'k':
+        color_cube(cube_select)
+    elif key == 'l':
+        del_cube(cube_select)
+    elif key == '1':
+        kej = 1
+        # ESC HERE
+    elif key == '\x1b':
+        sys.exit()
+    elif kej == '':
+        kej = 0
+
+
 # shadery
 vs = compileShader(vsc, GL_VERTEX_SHADER)
 fs = compileShader(fsc, GL_FRAGMENT_SHADER)
@@ -231,6 +290,8 @@ glutDisplayFunc(dummy)  # niewykorzystana
 kat = 0
 while True:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # czyszczenie sceny
+    glutMouseFunc(mouseMouse)
+    glutMotionFunc(mouseMotion)
     # modyfikacja trójkąta
     # punkty[0] += 0.0001
     # model, widok, projekcja
@@ -240,7 +301,7 @@ while True:
     punkty3 = cube(0.1, .1, 0.1, kat)
 
     kat += 0.001
-    mvp = create_mvp(windowWidth, windowHeight)
+    mvp = create_mvp(mousex, mousey)
     mvploc = glGetUniformLocation(sp, "mvp")  # pobieranie nazwy z shadera
     glUniformMatrix4fv(mvploc, 1, GL_FALSE, mvp)  # przekazywanie do shadera
     # ustawiamy pozycję i kolor
@@ -256,4 +317,5 @@ while True:
 
     glutSwapBuffers()
     glFlush()
+    glutKeyboardFunc(keyboard)
     glutMainLoopEvent()

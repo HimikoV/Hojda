@@ -236,7 +236,7 @@ while True:
     # mvp = np.identity(4, float)
     punkty1 = cube(1, 1, 0.2, kat)
     punkty2 = cube(2, 2, 0.2, kat)
-    punkty3 = cube(3, 2, 0.2, kat)
+    punkty3 = cube(0.1, .1, 0.1, kat)
 
     kat += 0.001
     mvp = create_mvp(windowWidth, windowHeight)

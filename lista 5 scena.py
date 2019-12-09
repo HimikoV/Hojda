@@ -102,27 +102,10 @@ def cube(mousex,mousey,size):
     punkty = [mousex + size, mousey + size, 1.0 - size,  # front upper right
             mousex - size, mousey + size, 1.0 - size,  # front upper left
             mousex - size, mousey + size, 1.0 + size,  # back upper left
-            mousex + size, mousey + size, 1.0 + size,  # back upper right
+            mousex + size, mousey + size, 1.0 - size,  # front upper right
+            mousex + size, mousey + size, 1.0 + size,  # front upper left
             mousex - size, mousey + size, 1.0 + size,  # back upper left
-            mousex + size, mousey + size, 1.0 + size,  # back upper right
-            mousex + size, mousey - size, 1.0 + size,  # back lower right
-            mousex - size, mousey - size, 1.0 + size,  # back lower left
-            mousex + size, mousey - size, 1.0 + size,  # back lower right
-            mousex - size, mousey - size, 1.0 + size,  # back lower left
-            mousex - size, mousey - size, 1.0 - size,  # front lower left
-            mousex + size, mousey - size, 1.0 - size,  # fron lower right
-            mousex + size, mousey - size, 1.0 - size,  # front lower right
-            mousex - size, mousey - size, 1.0 - size,  # front lower left
-            mousex - size, mousey + size, 1.0 - size,  # front upper left
-            mousex + size, mousey + size, 1.0 - size,  # front upper right
-            mousex + size, mousey + size, 1.0 - size,  # front upper right
-            mousex + size, mousey - size, 1.0 - size,  # front lower right
-            mousex + size, mousey - size, 1.0 + size,  # back lower right
-            mousex + size, mousey + size, 1.0 + size,  # back upper right
-            mousex - size, mousey + size, 1.0 - size,  # front upper left
-            mousex - size, mousey - size, 1.0 - size,  # front lower left
-            mousex - size, mousey - size, 1.0 + size,  # back lower left
-            mousex - size, mousey + size, 1.0 + size]  # back upper left
+           ]  # back upper left
     return punkty
 
 zplus = 0.0
@@ -189,7 +172,7 @@ while True:
     punkty1 = cube(0,0,0.5)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, punkty1)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, kolory)
-    glDrawArrays(GL_TRIANGLES, 0, 3 * 12)
+    glDrawArrays(GL_TRIANGLES, 0, 3 *2)
     glutSwapBuffers()
     glFlush()
     glutMainLoopEvent()
