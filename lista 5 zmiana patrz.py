@@ -1,7 +1,5 @@
 """
 DODAŁEM OBROT CUBE'a PRZY UZYCIU TEJ FUNKCJI Z LISTY 4
-
-
 """
 
 from OpenGL.GL import *
@@ -11,19 +9,12 @@ from OpenGL.GL.shaders import *
 import numpy as np
 import ctypes
 
+x1 = x2 = x3 = 0
 windowWidth = 800
 windowHeight = 600
-mousex=windowWidth/2
-mousey=windowHeight/2
-camx = 0.0
-camy = 0.0
-camz = -5.0
-lookx = 0.0
-looky = 0.0
-lookz = 5.0
-upx = 0.0
-upy = 1.0
-upz = 0.0
+mousex = windowWidth
+mousey = windowHeight
+
 # vertex shader - kod
 vsc = """
 #version 330 core
@@ -45,12 +36,15 @@ void main() {
 out_kolor = vec4(inter_kolor.xyzw);
 }
 """
+
 def mouseMotion(x, y):
-    global mousex, mousey
+    global mousex, mousey,ok,ko
     mousex = 0 if x < 0 else windowWidth if x > windowWidth else x
     mousey = 0 if y < 0 else windowHeight if y > windowHeight else y
+    ok = mousex/100
+    print(ok)
+    ko = mousey/100
     pass
-
 
 def mouseMouse(btn, stt, x, y):
     pass
@@ -66,6 +60,7 @@ def paint():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     # reakcja na ruch myszką
     glMatrixMode(GL_MODELVIEW)
+
     glLoadIdentity()
     glutSwapBuffers()
     pass
@@ -90,26 +85,26 @@ def normalized(v):
     return v / norm if norm > 0 else v
 
 
-def look_at(eyeX,eyeY,eyeZ, targetX,targetY,targetZ, upX,upY,upZ):
-    zax = normalized(np.array([eyeX,eyeY,eyeZ]) - np.array([targetX,targetY,targetZ]))
-    xax = normalized(np.cross([upX,upY,upZ], zax))
+def patrz(eyeX, eyeY, eyeZ, targetX, targetY, targetZ, upX, upY, upZ):
+    zax = normalized(np.array([eyeX, eyeY, eyeZ]) - np.array([targetX, targetY, targetZ]))
+    xax = normalized(np.cross([upX, upY, upZ], zax))
     yax = np.cross(zax, xax)
-    x = - xax.dot([eyeX,eyeY,eyeZ])
-    y = - yax.dot([eyeX,eyeY,eyeZ])
-    z = - zax.dot([eyeX,eyeY,eyeZ])
+    x = - xax.dot([eyeX, eyeY, eyeZ])
+    y = - yax.dot([eyeX, eyeY, eyeZ])
+    z = - zax.dot([eyeX, eyeY, eyeZ])
     return np.array(((xax[0], yax[0], zax[0], 0),
                      (xax[1], yax[1], zax[1], 0),
                      (xax[2], yax[2], zax[2], 0),
                      (x, y, z, 1)))
 
 
-def create_mvp(width, height):
+def create_mvp(width, height,ok,ko):
     fov, near, far = 45, 0.1, 100
-    eyeX,eyeY,eyeZ = np.array((4, 3, 3))
-    targetX,targetY,targetZ = np.array((0, 0, 0))
-    upX,upY,upZ=np.array((0, 1, 0))
+    eyeX, eyeY, eyeZ = np.array((ok, ko, 3))
+    targetX, targetY, targetZ = np.array((0, 0, 0))
+    upX, upY, upZ = np.array((0, 1, 0))
     projection = perspective(fov, width / height, near, far)
-    view = look_at(eyeX,eyeY,eyeZ, targetX,targetY,targetZ, upX,upY,upZ)
+    view = patrz(eyeX, eyeY, eyeZ, targetX, targetY, targetZ, upX, upY, upZ)
     model = np.identity(4)
     mvp = model @ view @ projection
     return mvp.astype(np.float32)
@@ -123,12 +118,7 @@ glutInitWindowSize(windowWidth, windowHeight)
 glutCreateWindow(b"PyOpenGL")
 
 
-# # macierz punktów
-# punkty = [-1.0, 0.0, 1.0,
-#           1.0, 0.0, 1.0,
-#           0.0, 1.0, 1.0]
-
-def cube(mousex, mousey, size, kat):
+def cube(mousex, mousey, size, kat, x1, x2, x3):
     punkty = [mousex + size, mousey - size, 1.0 - size,
               mousex - size, mousey - size, 1.0 - size,
               mousex - size, mousey + size, 1.0 - size,
@@ -164,17 +154,35 @@ def cube(mousex, mousey, size, kat):
               mousey + size, mousey - size, 1.0 + size,
               mousex - size, mousey - size, 1.0 - size,
               mousex + size, mousey - size, 1.0 + size,
-              mousex + size, mousey - size, 1.0 - size,]
+              mousex + size, mousey - size, 1.0 - size, ]
 
-    p0 = [mousex,mousey,1]
-    wersor = [12,41,11]
+    p0 = [mousex, mousey, 1]
+    wersor = [12, 41, 11]
     lel = []
     for i in range(36):
         xd = obrot_zad_2(p0, wersor, (punkty[3 * i], punkty[3 * i + 1], punkty[3 * i + 2]), kat).tolist()
         lel.append(xd[0])
         lel.append(xd[1])
         lel.append(xd[2])
-    return lel
+
+    lel2 = []
+    for i in range(36):
+        npkt = cam_trans((lel[3 * i], lel[3 * i + 1], lel[3 * i + 2]), x1, x2, x3)
+        # npkt = npkt.tolist()
+        lel2.append(npkt[0])
+        lel2.append(npkt[1])
+        lel2.append(npkt[2])
+    return lel2
+
+
+def cam_trans(p, tx, ty, tz):
+    cam_t = [[1, 0, 0, tx],
+             [0, 1, 0, ty],
+             [0, 0, 1, tz],
+             [0, 0, 0, 1]]
+    p = [p[0], p[1], p[2], 1]
+    xd = np.matmul(cam_t, p)
+    return xd
 
 
 def obrot_zad_2(p0, wektor, punkt, kat):
@@ -182,9 +190,15 @@ def obrot_zad_2(p0, wektor, punkt, kat):
     if jednostkowy != 1:
         wersor = wektor / jednostkowy
     wersor = np.array(wersor)
-    M=[[wersor[0]**2*(1-np.cos(kat))+np.cos(kat),wersor[0]*wersor[1]*(1-np.cos(kat)-wersor[2]*np.sin(kat)),wersor[0]*wersor[2]*(1-np.cos(kat))+wersor[1]*np.sin(kat)],
-       [wersor[0]*wersor[1]*(1-np.cos(kat))+wersor[2]*np.sin(kat),wersor[1]**2*(1-np.cos(kat)+np.cos(kat)),wersor[1]*wersor[2]*(1-np.cos(kat))-wersor[0]*np.sin(kat)],
-       [wersor[0]*wersor[2]*(1-np.cos(kat))-wersor[1]*np.sin(kat),wersor[1]*wersor[2]*(1-np.cos(kat)+wersor[0]*np.sin(kat)),wersor[2]**2*(1-np.cos(kat))+np.cos(kat)]]
+    M = [[wersor[0] ** 2 * (1 - np.cos(kat)) + np.cos(kat),
+          wersor[0] * wersor[1] * (1 - np.cos(kat) - wersor[2] * np.sin(kat)),
+          wersor[0] * wersor[2] * (1 - np.cos(kat)) + wersor[1] * np.sin(kat)],
+         [wersor[0] * wersor[1] * (1 - np.cos(kat)) + wersor[2] * np.sin(kat),
+          wersor[1] ** 2 * (1 - np.cos(kat) + np.cos(kat)),
+          wersor[1] * wersor[2] * (1 - np.cos(kat)) - wersor[0] * np.sin(kat)],
+         [wersor[0] * wersor[2] * (1 - np.cos(kat)) - wersor[1] * np.sin(kat),
+          wersor[1] * wersor[2] * (1 - np.cos(kat) + wersor[0] * np.sin(kat)),
+          wersor[2] ** 2 * (1 - np.cos(kat)) + np.cos(kat)]]
 
     M = np.array(M)
     punkt = np.array(punkt)
@@ -192,9 +206,7 @@ def obrot_zad_2(p0, wektor, punkt, kat):
     punkt = M @ punkt.T
     punkt = punkt + np.array(p0)
     punkt = punkt.T
-    # punkt=lookAt(center[0],center[1],center[2])[:3,:3]@punkt
     return punkt
-
 
 
 zplus = 0.0
@@ -237,36 +249,27 @@ kolory = [0.583, 0.771, 0.014,
 
 
 def keyboard(bkey, x, y):
-    global mousex
+    global x1
+    global x2
+    global x3
+
     global lookz
     global mousey
     global kej
     global cube_select
     key = bkey.decode("utf-8")
     if key == 'd':
-        mousex += 10
+        x1 += 0.01
     elif key == 'a':
-        mousex -= 10
+        x1 -= 0.01
     elif key == 'w':
-        mousey += 5
+        x2 += 0.01
     elif key == 's':
-        mousey -= 5
-    elif key == '+':
-        if cube_select >= len(kordy):
-            pass
-        else:
-            cube_select += 1
-    elif key == '-':
-        if cube_select < 1:
-            pass
-        else:
-            cube_select -= 1
-    elif key == 'k':
-        color_cube(cube_select)
-    elif key == 'l':
-        del_cube(cube_select)
-    elif key == '1':
-        kej = 1
+        x2 -= 0.01
+    elif key == 'q':
+        x3 -= 0.01
+    elif key == 'e':
+        x3 += 0.01
         # ESC HERE
     elif key == '\x1b':
         sys.exit()
@@ -279,6 +282,9 @@ vs = compileShader(vsc, GL_VERTEX_SHADER)
 fs = compileShader(fsc, GL_FRAGMENT_SHADER)
 sp = glCreateProgram()
 glAttachShader(sp, vs)
+glutMouseFunc(mouseMouse)
+glutMotionFunc(mouseMotion)
+
 glAttachShader(sp, fs)
 glLinkProgram(sp)
 glUseProgram(sp)
@@ -288,20 +294,18 @@ glEnableVertexAttribArray(1)
 
 glutDisplayFunc(dummy)  # niewykorzystana
 kat = 0
+ok = 0
+ko = 0
 while True:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # czyszczenie sceny
-    glutMouseFunc(mouseMouse)
-    glutMotionFunc(mouseMotion)
     # modyfikacja trójkąta
-    # punkty[0] += 0.0001
     # model, widok, projekcja
     # mvp = np.identity(4, float)
-    punkty1 = cube(1, 1, 0.2, kat)
-    punkty2 = cube(2, 2, 0.2, kat)
-    punkty3 = cube(0.1, .1, 0.1, kat)
-
+    punkty1 = cube(1, 1, 0.2, kat, x1, x2, x3)
+    punkty2 = cube(2, 2, 0.2, kat, x1, x2, x3)
+    punkty3 = cube(0.1, .1, 0.1, kat, x1, x2, x3)
     kat += 0.001
-    mvp = create_mvp(mousex, mousey)
+    mvp = create_mvp(mousex, mousey,ok,ko)
     mvploc = glGetUniformLocation(sp, "mvp")  # pobieranie nazwy z shadera
     glUniformMatrix4fv(mvploc, 1, GL_FALSE, mvp)  # przekazywanie do shadera
     # ustawiamy pozycję i kolor
