@@ -39,11 +39,12 @@ out_kolor = vec4(inter_kolor.xyzw);
 
 def mouseMotion(x, y):
     global mousex, mousey,ok,ko
-    mousex = 0 if x < 0 else windowWidth if x > windowWidth else x
-    mousey = 0 if y < 0 else windowHeight if y > windowHeight else y
-    ok = mousex/100
+    mousex = 0 if x < 0 else windowWidth/100 if x > windowWidth else x/100
+    mousey = 0 if y < 0 else windowHeight/100 if y > windowHeight else y/100
+    ok = mousex
     print(ok)
-    ko = mousey/100
+    ko = mousey
+
     pass
 
 def mouseMouse(btn, stt, x, y):
@@ -100,7 +101,7 @@ def patrz(eyeX, eyeY, eyeZ, targetX, targetY, targetZ, upX, upY, upZ):
 
 def create_mvp(width, height,ok,ko):
     fov, near, far = 45, 0.1, 100
-    eyeX, eyeY, eyeZ = np.array((ok, ko, 3))
+    eyeX, eyeY, eyeZ = np.array((ok, ko, 2))
     targetX, targetY, targetZ = np.array((0, 0, 0))
     upX, upY, upZ = np.array((0, 1, 0))
     projection = perspective(fov, width / height, near, far)
@@ -305,6 +306,7 @@ while True:
     punkty2 = cube(2, 2, 0.2, kat, x1, x2, x3)
     punkty3 = cube(0.1, .1, 0.1, kat, x1, x2, x3)
     kat += 0.001
+
     mvp = create_mvp(mousex, mousey,ok,ko)
     mvploc = glGetUniformLocation(sp, "mvp")  # pobieranie nazwy z shadera
     glUniformMatrix4fv(mvploc, 1, GL_FALSE, mvp)  # przekazywanie do shadera
