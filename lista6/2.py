@@ -33,6 +33,11 @@ tri3 = dd(tri3);
 tri3.center = [(tri3.a[0] + tri3.b[0] + tri3.c[0]) / 3,
                (tri3.a[1] + tri3.b[1] + tri3.c[1]) / 3];
 
+def ccw(A,B,C):
+    return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
+# Return true if line segments AB and CD intersect
+def intersect(A,B,C,D):
+    return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 
 def triColDet(a, b, c, center, aa, bb, cc, center2):
     area = np.abs((b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]))
@@ -44,10 +49,9 @@ def triColDet(a, b, c, center, aa, bb, cc, center2):
     area1 = np.abs((a[0] - p[0]) * (b[1] - p[1]) - (b[0] - p[0]) * (a[1] - p[1]))
     area2 = np.abs((b[0] - p[0]) * (c[1] - p[1]) - (c[0] - p[0]) * (b[1] - p[1]))
     area3 = np.abs((c[0] - p[0]) * (a[1] - p[1]) - (a[0] - p[0]) * (c[1] - p[1]))
-    if (area1 + area2 + area3) != area and (np.sqrt((center[0] - center2[0])**2+ (center[1] - center2[1])**2) > np.sqrt((p[0]-center2[0])**2 + (p[1]-center2[1])**2)):
+    if (area1 + area2 + area3) != area and not(intersect(a,b,aa,bb)) and not(intersect(a,b,bb,cc)) and not(intersect(a,b,cc,aa)) and not(intersect(b,c,aa,bb)) and not(intersect(b,c,bb,cc)) and not(intersect(b,c,cc,aa)) and not(intersect(c,a,aa,bb)) and not(intersect(c,a,bb,cc)) and not(intersect(c,a,cc,aa)):
         return 0
     return 1;
-
 
 # funkcja rysująca trójkąt w 2d
 def dtri2f(a, b, c, col):
@@ -57,7 +61,6 @@ def dtri2f(a, b, c, col):
     glVertex2fv(b);
     glVertex2fv(c);
     glEnd();
-
 
 # obsługa klawiatury
 def keypress(key, x, y):
@@ -70,7 +73,6 @@ def keypress(key, x, y):
                    (tri3.a[1] + tri3.b[1] + tri3.c[1]) / 3];
     if key == b"q": tri3 = rotTri(tri3, 0.1);
     if key == b"e": tri3 = rotTri(tri3, -0.1);
-
 
 # rotacja trójkąta (uwaga: deformacja przy każdym uruchomieniu)
 def rotTri(tri, rot):
@@ -88,7 +90,6 @@ def rotTri(tri, rot):
     tri.c[1] = ny;
     return tri;
 
-
 # wymuszenie częstotliwości odświeżania
 def cupdate():
     global tick;
@@ -97,7 +98,6 @@ def cupdate():
         return False;
     tick = ltime;
     return True;
-
 
 # pętla wyświetlająca
 def display():
@@ -121,7 +121,6 @@ def display():
     txt += "\n";
     sys.stdout.write(txt);
     glFlush();
-
 
 glutInit();
 glutInitWindowSize(600, 600);
