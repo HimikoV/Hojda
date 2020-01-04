@@ -39,7 +39,32 @@ def ccw(A,B,C):
 def intersect(A,B,C,D):
     return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 
-def triColDet(a, b, c, center, aa, bb, cc, center2):
+def placeholder(a,b,c,aa,bb,cc):
+    area = np.abs((b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]))
+    ph1 = [aa, bb, cc]
+    counter=0
+    for p in ph1:
+        area1 = np.abs((a[0] - p[0]) * (b[1] - p[1]) - (b[0] - p[0]) * (a[1] - p[1]))
+        area2 = np.abs((b[0] - p[0]) * (c[1] - p[1]) - (c[0] - p[0]) * (b[1] - p[1]))
+        area3 = np.abs((c[0] - p[0]) * (a[1] - p[1]) - (a[0] - p[0]) * (c[1] - p[1]))
+        if np.round((area1 + area2 + area3),2) == np.round(area,2):
+            counter+=1
+    if counter==3:
+        return 1
+    return 0
+
+def triINtri(a,b,c,center,aa,bb,cc):
+    odl1=np.sqrt((center[0] - aa[0])**2 + (center[1]-aa[1])**2)
+    odl2=np.sqrt((center[0] - bb[0])**2 + (center[1]-bb[1])**2)
+    odl3=np.sqrt((center[0] - cc[0])**2 + (center[1]-cc[1])**2)
+    odl11=np.sqrt((center[0] - a[0])**2 + (center[1]-a[1])**2)
+    odl22=np.sqrt((center[0] - b[0])**2 + (center[1]-a[1])**2)
+    odl33=np.sqrt((center[0] - c[0])**2 + (center[1]-a[1])**2)
+    if (odl11<odl1 or odl22 < odl2 or odl33<odl3) and placeholder(a,b,c,aa,bb,cc):
+        return 1
+    return 0
+
+def triColDet(a, b, c, center, aa, bb, cc):
     area = np.abs((b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]))
     ph = [np.sqrt((aa[0] - center[0]) ** 2 + (aa[1] - center[1]) ** 2),
           np.sqrt((bb[0] - center[0]) ** 2 + (bb[1] - center[1]) ** 2),
@@ -52,6 +77,8 @@ def triColDet(a, b, c, center, aa, bb, cc, center2):
     if (area1 + area2 + area3) != area and not(intersect(a,b,aa,bb)) and not(intersect(a,b,bb,cc)) and not(intersect(a,b,cc,aa)) and not(intersect(b,c,aa,bb)) and not(intersect(b,c,bb,cc)) and not(intersect(b,c,cc,aa)) and not(intersect(c,a,aa,bb)) and not(intersect(c,a,bb,cc)) and not(intersect(c,a,cc,aa)):
         return 0
     return 1;
+
+
 
 # funkcja rysująca trójkąt w 2d
 def dtri2f(a, b, c, col):
@@ -111,13 +138,48 @@ def display():
     dtri2f(tri1.a, tri1.b, tri1.c, tri1.col);
     tri2 = rotTri(tri2, 0.1);
     txt = "-";
-    if triColDet(tri1.a, tri1.b, tri1.c, tri1.center, tri2.a, tri2.b, tri2.c, tri2.center) or triColDet(tri2.a, tri2.b, tri2.c, tri2.center, tri1.a, tri1.b, tri1.c, tri1.center):
+    t1t2=False
+    t1t3=False
+    t2t3=False
+    if triINtri(tri1.a, tri1.b, tri1.c, tri1.center, tri2.a, tri2.b, tri2.c):
+        txt += "triangle 2 is in triangle 1, "
+    elif triINtri(tri2.a, tri2.b, tri2.c,tri2.center, tri1.a, tri1.b,tri1.c):
+        txt += "triangle 1 is in triangle 2, "
+    elif triColDet(tri1.a, tri1.b, tri1.c, tri1.center, tri2.a, tri2.b, tri2.c) or triColDet(tri2.a, tri2.b, tri2.c, tri2.center, tri1.a, tri1.b, tri1.c):
         txt += "tri1 x tri2, ";
-    if triColDet(tri1.a, tri1.b, tri1.c, tri1.center, tri3.a, tri3.b, tri3.c, tri3.center) or triColDet(tri3.a, tri3.b, tri3.c, tri3.center, tri1.a, tri1.b, tri1.c, tri1.center):
+        tri1.col=[0,0,0]
+        tri2.col = [1,1,1]
+        t1t2=True
+    else:
+        if not(t1t3 and t2t3):
+            tri1.col = [1, 0, 0]
+            tri2.col = [0, 0, 1]
+    if triINtri(tri1.a, tri1.b, tri1.c, tri1.center, tri3.a, tri3.b, tri3.c):
+        txt += "triangle 3 is in triangle 1,  "
+    elif triINtri(tri3.a, tri3.b, tri3.c,tri3.center, tri1.a, tri1.b,tri1.c):
+        txt += "triangle 1 is in triangle 3, "
+    elif triColDet(tri1.a, tri1.b, tri1.c, tri1.center, tri3.a, tri3.b, tri3.c) or triColDet(tri3.a, tri3.b, tri3.c, tri3.center, tri1.a, tri1.b, tri1.c):
         txt += "tri1 x tri3, ";
-    if triColDet(tri3.a, tri3.b, tri3.c, tri3.center, tri2.a, tri2.b, tri2.c, tri2.center) or triColDet(tri2.a, tri2.b, tri2.c, tri2.center, tri3.a, tri3.b, tri3.c, tri3.center):
+        tri1.col = [0, 0, 0]
+        tri3.col = [1,1,1]
+        t1t3=True
+    else:
+        if not(t1t2 or t2t3):
+            tri1.col = [1, 0, 0]
+            tri3.col = [0, 1, 1]
+    if triINtri(tri3.a, tri3.b, tri3.c, tri3.center, tri2.a, tri2.b, tri2.c):
+        txt += "triangle 2 is in triangle 3, "
+    elif triINtri(tri2.a, tri2.b, tri2.c,tri2.center, tri3.a, tri3.b,tri3.c):
+        txt += "triangle 3 is in triangle 2, "
+    elif triColDet(tri3.a, tri3.b, tri3.c, tri3.center, tri2.a, tri2.b, tri2.c) or triColDet(tri2.a, tri2.b, tri2.c, tri2.center, tri3.a, tri3.b, tri3.c):
         txt += "tri2 x tri3, ";
-
+        tri2.col = [0, 0, 0]
+        tri3.col = [1, 1, 1]
+        t2t3=True
+    else:
+        if not(t1t3 or t1t2):
+            tri2.col = [0, 0, 1]
+            tri3.col = [0, 1, 1]
     txt += "\n";
     sys.stdout.write(txt);
     glFlush();
