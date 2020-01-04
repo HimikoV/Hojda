@@ -120,6 +120,12 @@ def keypress(key, x, y):
         for i in range(4):
             for j in range(3):
                 czworosciany[counter][i][j][2]-=0.1
+    if key == b'b':
+        #obrot w lewo
+        pass
+    if key == b'm':
+        #obrot w prawo
+        pass
 
 # wymuszenie częstotliwości odświeżania
 def cupdate():
@@ -144,7 +150,7 @@ def display():
     glMatrixMode(GL_MODELVIEW);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    dFacelist(czworosciany[0]);
+    dFacelist(tetra1);
     dFacelist(tetra2);
     glFlush();
 
