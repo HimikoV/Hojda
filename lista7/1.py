@@ -7,11 +7,14 @@ import numpy as np
 
 # licznik czasu - do wymuszenia częstotliwości odświeżania
 tick = 0
+
+
 # klasa pomocnicza, pozwalająca na odwoływanie się do słowników przez notację kropkową
 class dd(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
+
 
 part1 = {}
 part1 = dd(part1)
@@ -21,12 +24,15 @@ part1.m = 10
 part1.r = 1
 part1.col = [0, 0.5, 0]
 part1.quad = None
+
+
 # rysowanie sfery
 def drawSphere(part):
     glLoadIdentity()
     glTranslatef(part.p[0], part.p[1], part.p[2])
     glColor3fv(part.col)
     gluSphere(part.quad, part.r, 16, 16)
+
 
 # rysowanie podłogi
 def drawFloor():
@@ -38,6 +44,29 @@ def drawFloor():
     glVertex3fv([10, 0, 10])
     glVertex3fv([10, 0, -10])
     glEnd()
+
+
+def drawScianki():
+    glLoadIdentity() # jedno sciano
+    glColor3fv([0.3, 0.3, 0.3])
+    glPolygonMode(GL_FRONT,GL_LINE)
+    glBegin(GL_POLYGON)
+    glVertex3fv([-10, 0, -10])
+    glVertex3fv([-10, 10, -10])
+    glVertex3fv([-10, 10, 10])
+    glVertex3fv([-10, 0, 10])
+    glEnd()
+
+    glLoadIdentity()  # drugo sciano
+    glColor3fv([0.3, 0.3, 0.3])
+    glPolygonMode(GL_FRONT,GL_LINE)
+    glBegin(GL_POLYGON)
+    glVertex3fv([-10, 0, -10])
+    glVertex3fv([-10, 10, -10])
+    glVertex3fv([-10, 10, 10])
+    glVertex3fv([-10, 0, 10])
+    glEnd()
+
 
 # ruch sfery
 def updateSphere(part, dt):
@@ -57,12 +86,13 @@ def checkSphereToFloorCollision(part):
             part.p[1] = part.r
         part.v[1] = - part.v[1]
 
+
 # obsługa kolizji
 def updateSphereCollision(part):
     if not checkSphereToFloorCollision(part1):
         return
     else:
-    # jeśli sfera zachodzi pod podłogę, to podnieś ją
+        # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
         part.v[1] = - part.v[1]
@@ -72,10 +102,11 @@ def updateSphereCollision(part):
 def cupdate():
     global tick
     ltime = time.clock()
-    if ltime < tick + 0.1: # max 10 ramek / s
+    if ltime < tick + 0.1:  # max 10 ramek / s
         return False
     tick = ltime
     return True
+
 
 # pętla wyświetlająca
 def display():
@@ -89,6 +120,7 @@ def display():
     global part1
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
+    drawScianki()
     drawFloor()
     updateSphere(part1, 0.1)
     updateSphereCollision(part1)
@@ -105,6 +137,10 @@ glutDisplayFunc(display)
 glutIdleFunc(display)
 glClearColor(1.0, 1.0, 1.0, 1.0)
 glClearDepth(1.0)
+
+# glPolygonMode(x,x)
+
+
 glDepthFunc(GL_LESS)
 glEnable(GL_DEPTH_TEST)
 # przygotowanie oświetlenia
