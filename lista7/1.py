@@ -1,3 +1,13 @@
+#LISTA 7
+#ZAD 1
+#1.1...DONE
+#1.2...DONE
+#1.3...DONE
+#1.4...NOT YET
+#1.5...NOT YET
+#1.6...NOT YET
+
+
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
