@@ -18,7 +18,7 @@ class dd(dict):
 
 part1 = {}
 part1 = dd(part1)
-part1.v = [1, -1, 0]
+part1.v = [3, -1, 1]
 part1.p = [-5, 2, 3]
 part1.m = 10
 part1.r = 1
@@ -61,11 +61,33 @@ def drawScianki():
     glColor3fv([0.3, 0.3, 0.3])
     glPolygonMode(GL_FRONT,GL_LINE)
     glBegin(GL_POLYGON)
-    glVertex3fv([-10, 0, -10])
-    glVertex3fv([-10, 10, -10])
-    glVertex3fv([-10, 10, 10])
     glVertex3fv([-10, 0, 10])
+    glVertex3fv([-10, 10, 10])
+    glVertex3fv([10, 10, 10])
+    glVertex3fv([10, 0, 10])
     glEnd()
+
+    glLoadIdentity()  # trzecio sciano
+    glColor3fv([0.3, 0.3, 0.3])
+    glPolygonMode(GL_FRONT,GL_LINE)
+    glBegin(GL_POLYGON)
+    glVertex3fv([10, 0, 10])
+    glVertex3fv([10, 10, 10])
+    glVertex3fv([10, 10, -10])
+    glVertex3fv([10, 0, -10])
+    glEnd()
+
+    glLoadIdentity()  # czwarto sciano
+    glColor3fv([0.3, 0.3, 0.3])
+    glPolygonMode(GL_FRONT,GL_LINE)
+    glBegin(GL_POLYGON)
+    glVertex3fv([10, 0, -10])
+    glVertex3fv([10, 10, -10])
+    glVertex3fv([-10, 10, -10])
+    glVertex3fv([-
+                 10, 0, -10])
+    glEnd()
+
 
 
 # ruch sfery
@@ -74,6 +96,28 @@ def updateSphere(part, dt):
     part.p[0] += dt * part.v[0]
     part.p[1] += dt * part.v[1]
     part.p[2] += dt * part.v[2]
+
+
+def checkSphereToSciankiCollision(part):
+    if part.p[0] - part.r < 5:
+        pass
+    else:
+        part.v[0] = -part.v[0]
+
+    if part.p[0] - part.r > -8:
+        pass
+    else:
+        part.v[0] = np.abs(part.v[0])
+
+    if part.p[2] - part.r < 10:
+        pass
+    else:
+        part.v[2] = - part.v[2]
+
+    if part.p[2] - part.r > -5:
+        pass
+    else:
+        part.v[2] = - part.v[2]
 
 
 # sprawdzenie czy doszło do kolizji
@@ -85,7 +129,6 @@ def checkSphereToFloorCollision(part):
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
         part.v[1] = - part.v[1]
-
 
 # obsługa kolizji
 def updateSphereCollision(part):
@@ -122,6 +165,7 @@ def display():
     glLoadIdentity()
     drawScianki()
     drawFloor()
+    checkSphereToSciankiCollision(part1)
     updateSphere(part1, 0.1)
     updateSphereCollision(part1)
     drawSphere(part1)
@@ -139,7 +183,6 @@ glClearColor(1.0, 1.0, 1.0, 1.0)
 glClearDepth(1.0)
 
 # glPolygonMode(x,x)
-
 
 glDepthFunc(GL_LESS)
 glEnable(GL_DEPTH_TEST)
