@@ -17,7 +17,9 @@ import numpy as np
 
 # licznik czasu - do wymuszenia częstotliwości odświeżania
 tick = 0
-
+eye = np.array([-5., 5., 10.]);  # pozycja
+orient = np.array([0., 0., -1.]);  # kierunek
+up = np.array([0., 1., 0.]);  # góra
 
 # klasa pomocnicza, pozwalająca na odwoływanie się do słowników przez notację kropkową
 class dd(dict):
@@ -108,26 +110,26 @@ def updateSphere(part, dt):
     part.p[2] += dt * part.v[2]
 
 
-def checkSphereToSciankiCollision(part):
+def checkSphereToSciankiCollision(part,k):
     if part.p[0] - part.r < 5:
         pass
     else:
-        part.v[0] = -part.v[0]
+        part.v[0] = -part.v[0]*k
 
     if part.p[0] - part.r > -8:
         pass
     else:
-        part.v[0] = np.abs(part.v[0])
+        part.v[0] = np.abs(part.v[0])*k
 
     if part.p[2] - part.r < 10:
         pass
     else:
-        part.v[2] = - part.v[2]
+        part.v[2] = - part.v[2]*k
 
     if part.p[2] - part.r > -5:
         pass
     else:
-        part.v[2] = - part.v[2]
+        part.v[2] = - part.v[2]*k
 
 
 # sprawdzenie czy doszło do kolizji
@@ -159,26 +161,85 @@ def cupdate():
         return False
     tick = ltime
     return True
+k=1
+import random
+def keyboard(bkey,x,y):
+    key = bkey.decode("utf-8")
+    global k,eye, orient, up,part1
+    if key == 'k':
+        k+=0.05
+    if key=='l':
+        k-=0.05
+    if key == "e":
+        eye = eye + orient * np.array([0.1, 0.1, 0.1]);
+    if key == "q":
+        eye = eye - orient * np.array([0.1, 0.1, 0.1]);
+    if key == "a":
+        right = np.cross(up, orient);
+        right = right / np.linalg.norm(right);
+        inverse = np.array([right, up, orient]);
+        inverse = np.transpose(inverse);
+        rot = np.array([[np.cos(0.1), 0, np.sin(0.1)], [0, 1, 0],
+                        [-np.sin(0.1), 0, np.cos(0.1)]]);
+        orient = np.matmul(rot, np.array([0, 0, 1]));
+        orient = np.matmul(inverse, orient);
+    if key == "d":
+        right = np.cross(up, orient);
+        right = right / np.linalg.norm(right);
+        inverse = np.array([right, up, orient]);
+        inverse = np.transpose(inverse);
+        rot = np.array([[np.cos(-0.1), 0, np.sin(-0.1)], [0, 1, 0],
+                        [-np.sin(-0.1), 0, np.cos(-0.1)]]);
+        orient = np.matmul(rot, np.array([0, 0, 1]));
+        orient = np.matmul(inverse, orient);
 
-
+    if key == "s":
+        right = np.cross(up, orient);
+        right = right / np.linalg.norm(right);
+        inverse = np.array([right, up, orient]);
+        inverse = np.transpose(inverse);
+        rot = np.array([[1, 0, 0], [0, np.cos(0.1), -np.sin(0.1)],
+                        [0, np.sin(0.1), np.cos(0.1)]]);
+        orient = np.matmul(rot, np.array([0, 0, 1]));
+        orient = np.matmul(inverse, orient);
+        up = np.matmul(rot, np.array([0, 1, 0]));
+        up = np.matmul(inverse, up);
+    if key == "w":
+        right = np.cross(up, orient);
+        right = right / np.linalg.norm(right);
+        inverse = np.array([right, up, orient]);
+        inverse = np.transpose(inverse);
+        rot = np.array([[1, 0, 0], [0, np.cos(-0.1), -np.sin(-0.1)],
+                        [0, np.sin(-0.1), np.cos(-0.1)]]);
+        orient = np.matmul(rot, np.array([0, 0, 1]));
+        orient = np.matmul(inverse, orient);
+        up = np.matmul(rot, np.array([0, 1, 0]));
+        up = np.matmul(inverse, up);
+    if key == 'y':
+        part1.v[random.randint(0,2)]+=0.5
+    if key=='u':
+        part1.v[random.randint(0, 2)] -= 0.5
 # pętla wyświetlająca
 def display():
     if not cupdate():
         return
+    global part1,k,eye,orient,up
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
-    gluLookAt(-5, 5, 10, 0, 0, 0, 0, 1, 0)
+    center = eye + orient;
+    gluLookAt(eye[0],eye[1],eye[2],center[0],center[1],center[2],up[0],up[1],up[2])
     glMatrixMode(GL_MODELVIEW)
-    global part1
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     drawScianki()
     drawFloor()
-    checkSphereToSciankiCollision(part1)
+    checkSphereToSciankiCollision(part1,k)
+    print(k)
     updateSphere(part1, 0.1)
     updateSphereCollision(part1)
     drawSphere(part1)
+    glutKeyboardFunc(keyboard)
     glFlush()
 
 
