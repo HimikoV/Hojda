@@ -3,9 +3,9 @@
 #1.1...DONE
 #1.2...DONE
 #1.3...DONE
-#1.4...NOT YET
-#1.5...NOT YET
-#1.6...NOT YET
+#1.4...DONE
+#1.5...NIE WIEM W SUMIE CZY O TO CHODZIŁO ALE INACZEJ NIE UMIAŁEM
+#1.6...DONE?
 
 
 from OpenGL.GL import *
