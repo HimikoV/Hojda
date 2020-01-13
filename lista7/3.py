@@ -147,25 +147,28 @@ def updateSphere(part, dt, aero, graw):
 
 
 def checkSphereToSciankiCollision(part, k):
-
     if part.p[0] - part.r < 7:
         pass
     else:
+        part.p[0] = 7+part.r
         part.v[0] = -part.v[0] * k
 
     if part.p[0] + part.r > -7:
         pass
     else:
+        part.p[0] = -part.r -7
         part.v[0] = -part.v[0] * k
 
     if part.p[2] - part.r < 15:
         pass
     else:
+        part.p[2] = 15 + part.r
         part.v[2] = - part.v[2] * k
 
     if part.p[2] + part.r > -7:
         pass
     else:
+        part.p[2] = -part.r - 7
         part.v[2] = - part.v[2] * k
 
 
