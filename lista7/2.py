@@ -112,26 +112,30 @@ def updateSphere(part, dt,aero,graw):
     part.p[2] += dt * part.v[2]
 
 
-def checkSphereToSciankiCollision(part,k):
+def checkSphereToSciankiCollision(part, k):
     if part.p[0] - part.r < 7:
         pass
     else:
-        part.v[0] = -part.v[0]*k
+        part.p[0] = 7+part.r
+        part.v[0] = -part.v[0] * k
 
     if part.p[0] + part.r > -7:
         pass
     else:
-        part.v[0] = np.abs(part.v[0])*k
+        part.p[0] = -part.r -7
+        part.v[0] = -part.v[0] * k
 
     if part.p[2] - part.r < 7:
         pass
     else:
-        part.v[2] = - part.v[2]*k
+        part.p[2] = 7 + part.r
+        part.v[2] = - part.v[2] * k
 
     if part.p[2] + part.r > -7:
         pass
     else:
-        part.v[2] = - part.v[2]*k
+        part.p[2] = -part.r - 7
+        part.v[2] = - part.v[2] * k
 
 
 # sprawdzenie czy doszło do kolizji
@@ -142,7 +146,6 @@ def checkSphereToFloorCollision(part):
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-        elif part.p[1] - part.r < 1.5:
             part.v[1] = - part.v[1]
 
 
@@ -154,7 +157,6 @@ def updateSphereCollision(part):
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-        elif part.p[1] - part.r < 1.5:
             part.v[1] = - part.v[1]
 
 
@@ -251,7 +253,7 @@ def keyboard(bkey,x,y):
     if key=='h':
         g-=0.001
     if key=='u':
-        part1.v[1]+=25
+        part1.v[1]+=10
 # pętla wyświetlająca
 def display():
     if not cupdate():
