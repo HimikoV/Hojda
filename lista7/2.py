@@ -112,22 +112,22 @@ def updateSphere(part, dt,aero,graw):
 
 
 def checkSphereToSciankiCollision(part,k):
-    if part.p[0] - part.r < 5:
+    if part.p[0] - part.r < 7:
         pass
     else:
         part.v[0] = -part.v[0]*k
 
-    if part.p[0] - part.r > -8:
+    if part.p[0] + part.r > -7:
         pass
     else:
         part.v[0] = np.abs(part.v[0])*k
 
-    if part.p[2] - part.r < 10:
+    if part.p[2] - part.r < 7:
         pass
     else:
         part.v[2] = - part.v[2]*k
 
-    if part.p[2] - part.r > -5:
+    if part.p[2] + part.r > -7:
         pass
     else:
         part.v[2] = - part.v[2]*k
@@ -251,7 +251,7 @@ def display():
     if not cupdate():
         return
     global part1,k,eye,orient,up,c,g
-    print("współczynnik aerodynamiczny:", c)
+    #print("współczynnik aerodynamiczny:", c)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
@@ -263,8 +263,9 @@ def display():
     drawScianki()
     drawFloor()
     checkSphereToSciankiCollision(part1,k)
-    print("współczynnik sprężystości: ", k)
-    print("siła grawitacji: ",g)
+    #print("współczynnik sprężystości: ", k)
+    #print("siła grawitacji: ",g)
+    print(part1.p)
     updateSphere(part1, 0.1,aerodynamika(part1.v,c),gravity(part1.m,g))
     updateSphereCollision(part1)
     drawSphere(part1)
