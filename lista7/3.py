@@ -2,7 +2,7 @@
 # ZAD 3
 # 1.1...DONE
 # 1.2...DONE
-# 1.3...DONE
+# 1.3...
 # 1.4...
 # 1.5...
 # 1.6...
@@ -203,16 +203,21 @@ def gravity(m, g):
     return grawitacja
 
 
-def colisionOvO(part1, part2):
-    x = part1.v
-    y = part2.v
-    list1=[part1.p[0],part1.p[2]]
-    list2=[part2.p[0],part2.p[2]]
+def colisionOvO(p1,p2):
+    list1=[p1.p[0],p1.p[2]]
+    list2=[p2.p[0],p2.p[2]]
     if np.sqrt((list1[0] - list2[0]) ** 2 + (list1[1] - list2[1]) ** 2) < 2 * part1.r:
-        part1.p[0], part1.p[2] = list1[0], list1[1]
-        part2.p[0], part2.p[2] = list2[0], list2[1]
-        part1.v = y
-        part2.v = x
+        p1.p[0], p2.p[2] = list1[0], list1[1]
+        p2.p[0], p2.p[2] = list2[0], list2[1]
+        m1, m2 = p1.r ** 2, p2.r ** 2
+        M = m1 + m2
+        r1, r2 = np.array(p1.p), np.array(p2.p)
+        d = np.linalg.norm(r1 - r2) ** 2
+        v1, v2 = np.array(p1.v), np.array(p2.v)
+        u1 = v1 - 2 * m2 / M * np.dot(v1 - v2, r1 - r2) / d * (r1 - r2)
+        u2 = v2 - 2 * m1 / M * np.dot(v2 - v1, r2 - r1) / d * (r2 - r1)
+        p1.v = u1
+        p2.v = u2
 
 
     else:
@@ -229,7 +234,7 @@ def cupdate():
     return True
 
 
-k = 0.95
+k = 1
 c = 0.02
 g = 0.01
 import random
