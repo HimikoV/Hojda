@@ -154,7 +154,7 @@ def checkSphereToSciankiCollision(part,k):
     if part.p[0] + part.r > -7:
         pass
     else:
-        part.v[0] = np.abs(part.v[0])*k
+        part.v[0] = -part.v[0]*k
 
     if part.p[2] - part.r < 15:
         pass
