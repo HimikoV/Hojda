@@ -137,9 +137,9 @@ def drawScianki():
 # ruch sfery
 def updateSphere(part, dt,aero,graw):
     # tutaj trzeba dodać obsługę sił, w tym grawitacji
-   # part.v[0]=part.v[0]+aero[0]
+    part.v[0]=part.v[0]+aero[0]
    # part.v[1] = part.v[1] + aero[1] - graw
-    #part.v[2] = part.v[2] + aero[2]
+    part.v[2] = part.v[2] + aero[2]
     part.p[0] += dt * part.v[0]
     part.p[1] += dt * part.v[1]
     part.p[2] += dt * part.v[2]
@@ -189,7 +189,6 @@ def updateSphereCollision(part):
         part.v[1] = - part.v[1]
 
 
-
 def aerodynamika(v,c):
     v = np.array(v)
     vnorm=v/np.linalg.norm(v)
@@ -200,9 +199,6 @@ def aerodynamika(v,c):
 def gravity(m,g):
     grawitacja=m*g
     return grawitacja
-
-# def grawitacja():
-
 
 # wymuszenie częstotliwości odświeżania
 def cupdate():
@@ -313,6 +309,8 @@ def display():
     updateSphereCollision(part2)
     updateSphere(part3, 0.1,aerodynamika(part3.v,c),gravity(part3.m,g))
     updateSphereCollision(part3)
+
+
     drawSphere(part1)
     drawSphere(part2)
     drawSphere(part3)
