@@ -186,59 +186,24 @@ def cupdate():
 k=0.94
 c=0.005
 g=0.1
+rot_cam=0
+cam_r=15
 import random
 def keyboard(bkey,x,y):
     key = bkey.decode("utf-8")
-    global k,eye, orient, up,part1,c,g
+    global k,rot_cam,cam_r,part1,c,g
     if key == 'k':
         k+=0.05
     if key=='l':
         k-=0.05
     if key == "e":
-        eye = eye + orient * np.array([0.1, 0.1, 0.1]);
+        cam_r-=1
     if key == "q":
-        eye = eye - orient * np.array([0.1, 0.1, 0.1]);
-    if key == "a":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[np.cos(0.1), 0, np.sin(0.1)], [0, 1, 0],
-                        [-np.sin(0.1), 0, np.cos(0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-    if key == "d":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[np.cos(-0.1), 0, np.sin(-0.1)], [0, 1, 0],
-                        [-np.sin(-0.1), 0, np.cos(-0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-
-    if key == "s":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[1, 0, 0], [0, np.cos(0.1), -np.sin(0.1)],
-                        [0, np.sin(0.1), np.cos(0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-        up = np.matmul(rot, np.array([0, 1, 0]));
-        up = np.matmul(inverse, up);
-    if key == "w":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[1, 0, 0], [0, np.cos(-0.1), -np.sin(-0.1)],
-                        [0, np.sin(-0.1), np.cos(-0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-        up = np.matmul(rot, np.array([0, 1, 0]));
-        up = np.matmul(inverse, up);
+        cam_r+=1
+    if key=='d':
+        rot_cam+=5
+    if key=='a':
+        rot_cam-=5
     if key == 'y':
         if random.random()>.5:
             part1.v[0]+=15
@@ -258,13 +223,14 @@ def keyboard(bkey,x,y):
 def display():
     if not cupdate():
         return
-    global part1,k,eye,orient,up,c,g
+    global part1,k,rot_cam,cam_r,c,g
     #print("współczynnik aerodynamiczny:", c)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
-    center = eye + orient;
-    gluLookAt(eye[0],eye[1],eye[2],center[0],center[1],center[2],up[0],up[1],up[2])
+    camx=sin(np.radians(rot_cam))*cam_r
+    camz=cos(np.radians(rot_cam))*cam_r
+    gluLookAt(camx,12,camz,0,0,0,0,1,0)
     glMatrixMode(GL_MODELVIEW)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
