@@ -103,6 +103,7 @@ def drawScianki():
 # ruch sfery
 def updateSphere(part, dt,aero,graw):
     # tutaj trzeba dodać obsługę sił, w tym grawitacji
+    print(part.r)
     part.v[0]=part.v[0]+aero[0]
     part.v[1] = part.v[1] + aero[1] - graw
     part.v[2] = part.v[2] + aero[2]
@@ -139,9 +140,11 @@ def checkSphereToFloorCollision(part):
         return True
     else:
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
-        if part.p[1] - part.r < .5:
-            part.p[1] = part.r-5
-        part.v[1] = - part.v[1]
+        if part.p[1] - part.r < 0:
+            part.p[1] = part.r
+        elif part.p[1] - part.r < 1.5:
+            part.v[1] = - part.v[1]
+
 
 # obsługa kolizji
 def updateSphereCollision(part):
@@ -150,8 +153,9 @@ def updateSphereCollision(part):
     else:
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
-            part.p[1] = part.r-5
-        part.v[1] = - part.v[1]
+            part.p[1] = part.r
+        elif part.p[1] - part.r < 1.5:
+            part.v[1] = - part.v[1]
 
 
 
@@ -179,7 +183,7 @@ def cupdate():
     return True
 k=0.94
 c=0.005
-g=0.005
+g=0.1
 import random
 def keyboard(bkey,x,y):
     key = bkey.decode("utf-8")
@@ -246,6 +250,8 @@ def keyboard(bkey,x,y):
         g+=0.001
     if key=='h':
         g-=0.001
+    if key=='u':
+        part1.v[1]+=25
 # pętla wyświetlająca
 def display():
     if not cupdate():
