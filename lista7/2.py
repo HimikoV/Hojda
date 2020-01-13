@@ -1,6 +1,6 @@
 #LISTA 7
 #ZAD 2
-#1.1...DONE.... nie wiadomo czemu poziom podłogi się podnosi :}
+#1.1...DONE
 #1.2...DONE
 
 
