@@ -30,8 +30,8 @@ quadratic = gluNewQuadric()
 
 part1 = {}
 part1 = dd(part1)
-part1.v = [0, 0, 0]
-part1.p = [1, 1, 3]
+part1.v = [-5, 0, 5]
+part1.p = [2, 1, 3]
 part1.m = 10
 part1.r = 1
 part1.col = [0, 0.5, 1]
@@ -39,7 +39,7 @@ part1.quad = quadratic
 
 part2 = {}
 part2 = dd(part2)
-part2.v = [0, 0, 0]
+part2.v = [-3, 0, 2]
 part2.p = [-5,1,10]
 part2.m = 10
 part2.r = 1
@@ -48,7 +48,7 @@ part2.quad = quadratic
 
 part3 = {}
 part3 = dd(part3)
-part3.v = [0, 0, 0]
+part3.v = [4, 0, 4]
 part3.p = [-5,1,-5]
 part3.m = 10
 part3.r = 1
@@ -156,7 +156,7 @@ def checkSphereToSciankiCollision(part,k):
     else:
         part.v[0] = np.abs(part.v[0])*k
 
-    if part.p[2] - part.r < 7:
+    if part.p[2] - part.r < 15:
         pass
     else:
         part.v[2] = - part.v[2]*k
@@ -272,10 +272,12 @@ def keyboard(bkey,x,y):
         if random.random()>.5:
             part1.v[0]+=15
             part2.v[0] += 15
+            part3.v[0] += 15
 
         else:
             part1.v[2]+=15
             part2.v[2] += 15
+            part3.v[2] += 15
     if key=='c':
         c+=0.001
     if key=='x':
@@ -288,7 +290,7 @@ def keyboard(bkey,x,y):
 def display():
     if not cupdate():
         return
-    global part1,k,eye,orient,up,c,g,part2
+    global part1,k,eye,orient,up,c,g,part2,part3
     #print("współczynnik aerodynamiczny:", c)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
