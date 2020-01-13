@@ -3,9 +3,9 @@
 # 1.1...DONE
 # 1.2...DONE
 # 1.3...DONE
-# 1.4...
-# 1.5...
-# 1.6...
+# 1.4...DONE
+# 1.5...DONE
+# 1.6...DONE
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -383,7 +383,7 @@ def keyboard(bkey, x, y):
         if metin2 %2==1:
             print(mousex,mousey)
             mousex,mousey=abs(mousex),abs(mousey)
-            predkosc=np.array([-cos(np.radians(mousex-45)),0,sin(np.radians(mousey+135    ))])
+            predkosc=np.array([-sin(np.radians(mousex-45)),0,cos(np.radians(mousex-45))])
             part3.v=predkosc*20
 
 
