@@ -234,7 +234,10 @@ def keyboard(bkey,x,y):
         up = np.matmul(rot, np.array([0, 1, 0]));
         up = np.matmul(inverse, up);
     if key == 'y':
-        part1.v[random.randint(0,2)]+=15
+        if random.random()>.5:
+            part1.v[0]+=15
+        else:
+            part1.v[2]+=15
     if key=='c':
         c+=0.001
     if key=='x':
