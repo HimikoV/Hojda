@@ -147,6 +147,7 @@ def updateSphere(part, dt, aero, graw):
 
 
 def checkSphereToSciankiCollision(part, k):
+
     if part.p[0] - part.r < 7:
         pass
     else:
@@ -176,7 +177,7 @@ def checkSphereToFloorCollision(part):
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-        part.v[1] = - part.v[1]
+            part.v[1] = - part.v[1]
 
 
 # obsługa kolizji
@@ -187,7 +188,7 @@ def updateSphereCollision(part):
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-        part.v[1] = - part.v[1]
+            part.v[1] = - part.v[1]
 
 
 def aerodynamika(v, c):
@@ -234,9 +235,9 @@ def cupdate():
     return True
 
 
-k = 1
+k = 0.8
 c = 0.02
-g = 0.01
+g = 0.5
 import random
 
 
