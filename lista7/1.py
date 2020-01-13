@@ -4,8 +4,8 @@
 #1.2...DONE
 #1.3...DONE
 #1.4...DONE
-#1.5...NIE WIEM W SUMIE CZY O TO CHODZIŁO ALE INACZEJ NIE UMIAŁEM
-#1.6...DONE?
+#1.5...DONE
+#1.6...DONE
 
 
 from OpenGL.GL import *
@@ -102,34 +102,40 @@ def drawScianki():
 
 
 
+
 # ruch sfery
 def updateSphere(part, dt):
     # tutaj trzeba dodać obsługę sił, w tym grawitacji
+
     part.p[0] += dt * part.v[0]
     part.p[1] += dt * part.v[1]
     part.p[2] += dt * part.v[2]
 
 
-def checkSphereToSciankiCollision(part,k):
-    if part.p[0] - part.r < 5:
+def checkSphereToSciankiCollision(part, k):
+    if part.p[0] - part.r < 7:
         pass
     else:
-        part.v[0] = -part.v[0]*k
+        part.p[0] = 7+part.r
+        part.v[0] = -part.v[0] * k
 
-    if part.p[0] - part.r > -8:
+    if part.p[0] + part.r > -7:
         pass
     else:
-        part.v[0] = np.abs(part.v[0])*k
+        part.p[0] = -part.r -7
+        part.v[0] = -part.v[0] * k
 
-    if part.p[2] - part.r < 10:
+    if part.p[2] - part.r < 7:
         pass
     else:
-        part.v[2] = - part.v[2]*k
+        part.p[2] = 7 + part.r
+        part.v[2] = - part.v[2] * k
 
-    if part.p[2] - part.r > -5:
+    if part.p[2] + part.r > -7:
         pass
     else:
-        part.v[2] = - part.v[2]*k
+        part.p[2] = -part.r - 7
+        part.v[2] = - part.v[2] * k
 
 
 # sprawdzenie czy doszło do kolizji
@@ -142,6 +148,7 @@ def checkSphereToFloorCollision(part):
             part.p[1] = part.r
         part.v[1] = - part.v[1]
 
+
 # obsługa kolizji
 def updateSphereCollision(part):
     if not checkSphereToFloorCollision(part1):
@@ -153,6 +160,11 @@ def updateSphereCollision(part):
         part.v[1] = - part.v[1]
 
 
+
+
+# def grawitacja():
+
+
 # wymuszenie częstotliwości odświeżania
 def cupdate():
     global tick
@@ -161,81 +173,63 @@ def cupdate():
         return False
     tick = ltime
     return True
-k=1
+k=0.94
+c=0.005
+g=0.1
+rot_cam=0
+cam_r=15
 import random
 def keyboard(bkey,x,y):
     key = bkey.decode("utf-8")
-    global k,eye, orient, up,part1
+    global k,rot_cam,cam_r,part1,c,g
     if key == 'k':
         k+=0.05
     if key=='l':
         k-=0.05
     if key == "e":
-        eye = eye + orient * np.array([0.1, 0.1, 0.1]);
+        cam_r-=1
     if key == "q":
-        eye = eye - orient * np.array([0.1, 0.1, 0.1]);
-    if key == "a":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[np.cos(0.1), 0, np.sin(0.1)], [0, 1, 0],
-                        [-np.sin(0.1), 0, np.cos(0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-    if key == "d":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[np.cos(-0.1), 0, np.sin(-0.1)], [0, 1, 0],
-                        [-np.sin(-0.1), 0, np.cos(-0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-
-    if key == "s":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[1, 0, 0], [0, np.cos(0.1), -np.sin(0.1)],
-                        [0, np.sin(0.1), np.cos(0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-        up = np.matmul(rot, np.array([0, 1, 0]));
-        up = np.matmul(inverse, up);
-    if key == "w":
-        right = np.cross(up, orient);
-        right = right / np.linalg.norm(right);
-        inverse = np.array([right, up, orient]);
-        inverse = np.transpose(inverse);
-        rot = np.array([[1, 0, 0], [0, np.cos(-0.1), -np.sin(-0.1)],
-                        [0, np.sin(-0.1), np.cos(-0.1)]]);
-        orient = np.matmul(rot, np.array([0, 0, 1]));
-        orient = np.matmul(inverse, orient);
-        up = np.matmul(rot, np.array([0, 1, 0]));
-        up = np.matmul(inverse, up);
+        cam_r+=1
+    if key=='d':
+        rot_cam+=5
+    if key=='a':
+        rot_cam-=5
     if key == 'y':
-        part1.v[random.randint(0,2)]+=0.5
+        if random.random()>.5:
+            part1.v[0]+=15
+        else:
+            part1.v[2]+=15
+    if key=='c':
+        c+=0.001
+    if key=='x':
+        c-=0.001
+    if key=='g':
+        g+=0.001
+    if key=='h':
+        g-=0.001
     if key=='u':
-        part1.v[random.randint(0, 2)] -= 0.5
+        part1.v[1]+=10
 # pętla wyświetlająca
 def display():
     if not cupdate():
         return
-    global part1,k,eye,orient,up
+    global part1,k,rot_cam,cam_r,c,g
+    #print("współczynnik aerodynamiczny:", c)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
-    center = eye + orient;
-    gluLookAt(eye[0],eye[1],eye[2],center[0],center[1],center[2],up[0],up[1],up[2])
+    camx=sin(np.radians(rot_cam))*cam_r
+    camz=cos(np.radians(rot_cam))*cam_r
+    gluLookAt(camx,12,camz,0,0,0,0,1,0)
     glMatrixMode(GL_MODELVIEW)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     drawScianki()
     drawFloor()
     checkSphereToSciankiCollision(part1,k)
-    print(k)
+    #print("współczynnik sprężystości: ", k)
+    #print("siła grawitacji: ",g)
+    print(part1.p)
     updateSphere(part1, 0.1)
     updateSphereCollision(part1)
     drawSphere(part1)
