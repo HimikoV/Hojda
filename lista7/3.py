@@ -26,6 +26,7 @@ class dd(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
+quadratic = gluNewQuadric()
 
 part1 = {}
 part1 = dd(part1)
@@ -33,8 +34,27 @@ part1.v = [0, 0, 0]
 part1.p = [1, 1, 3]
 part1.m = 10
 part1.r = 1
-part1.col = [1, 1, 1]
-part1.quad = None
+part1.col = [0, 0.5, 1]
+part1.quad = quadratic
+
+part2 = {}
+part2 = dd(part2)
+part2.v = [0, 0, 0]
+part2.p = [-5,1,10]
+part2.m = 10
+part2.r = 1
+part2.col = [1, 0, 0.5]
+part2.quad = quadratic
+
+part3 = {}
+part3 = dd(part3)
+part3.v = [0, 0, 0]
+part3.p = [-5,1,-5]
+part3.m = 10
+part3.r = 1
+part3.col = [1, 1, 1]
+part3.quad = quadratic
+
 
 
 colors = np.array(
@@ -50,22 +70,12 @@ colors = np.array(
     [0.5, 1, 0.5],
     [0.5, 0, 0.5]])
 # rysowanie sfery
-def drawSphere(part,color):
+def drawSphere(part):
     glLoadIdentity()
     glTranslatef(part.p[0], part.p[1], part.p[2])
-    glColor3fv(colors[color])
+    glColor3fv(part.col)
     gluSphere(part.quad, part.r, 16, 16)
 
-    glLoadIdentity()
-    glTranslatef(part.p[0]+2, part.p[1], part.p[2]+5)
-    glColor3fv(colors[color+1])
-    gluSphere(part.quad, part.r, 16, 16)
-
-
-    glLoadIdentity()
-    glTranslatef(-5, 1, 14)
-    glColor3fv([1,1,1])
-    gluSphere(part.quad, part.r, 16, 16)
 # rysowanie podłogi
 def drawFloor():
     glLoadIdentity()
@@ -261,8 +271,11 @@ def keyboard(bkey,x,y):
     if key == 'y':
         if random.random()>.5:
             part1.v[0]+=15
+            part2.v[0] += 15
+
         else:
             part1.v[2]+=15
+            part2.v[2] += 15
     if key=='c':
         c+=0.001
     if key=='x':
@@ -275,12 +288,12 @@ def keyboard(bkey,x,y):
 def display():
     if not cupdate():
         return
-    global part1,k,eye,orient,up,c,g
+    global part1,k,eye,orient,up,c,g,part2
     #print("współczynnik aerodynamiczny:", c)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
-    center = eye + orient;
+    center = eye + orient
     gluLookAt(eye[0],eye[1],eye[2],center[0],center[1],center[2],up[0],up[1],up[2])
     glMatrixMode(GL_MODELVIEW)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -288,12 +301,19 @@ def display():
     drawScianki()
     drawFloor()
     checkSphereToSciankiCollision(part1,k)
+    checkSphereToSciankiCollision(part2, k)
+    checkSphereToSciankiCollision(part3, k)
     #print("współczynnik sprężystości: ", k)
     #print("siła grawitacji: ",g)
     updateSphere(part1, 0.1,aerodynamika(part1.v,c),gravity(part1.m,g))
     updateSphereCollision(part1)
-    drawSphere(part1,4)
-
+    updateSphere(part2, 0.1,aerodynamika(part2.v,c),gravity(part2.m,g))
+    updateSphereCollision(part2)
+    updateSphere(part3, 0.1,aerodynamika(part3.v,c),gravity(part3.m,g))
+    updateSphereCollision(part3)
+    drawSphere(part1)
+    drawSphere(part2)
+    drawSphere(part3)
     glutKeyboardFunc(keyboard)
     glFlush()
 
