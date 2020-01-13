@@ -37,14 +37,35 @@ part1.col = [1, 1, 1]
 part1.quad = None
 
 
+colors = np.array(
+    [[1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1],
+    [0, 0, 0],
+    [1, 0, 1],
+    [1, 1, 0],
+    [0, 1, 1],
+    [1, 0.5, 0],
+    [0.5, 1, 0],
+    [0.5, 1, 0.5],
+    [0.5, 0, 0.5]])
 # rysowanie sfery
-def drawSphere(part):
+def drawSphere(part,color):
     glLoadIdentity()
     glTranslatef(part.p[0], part.p[1], part.p[2])
-    glColor3fv(part.col)
+    glColor3fv(colors[color])
+    gluSphere(part.quad, part.r, 16, 16)
+
+    glLoadIdentity()
+    glTranslatef(part.p[0]+2, part.p[1], part.p[2]+5)
+    glColor3fv(colors[color+1])
     gluSphere(part.quad, part.r, 16, 16)
 
 
+    glLoadIdentity()
+    glTranslatef(-5, 1, 14)
+    glColor3fv([1,1,1])
+    gluSphere(part.quad, part.r, 16, 16)
 # rysowanie podłogi
 def drawFloor():
     glLoadIdentity()
@@ -269,10 +290,10 @@ def display():
     checkSphereToSciankiCollision(part1,k)
     #print("współczynnik sprężystości: ", k)
     #print("siła grawitacji: ",g)
-    print(part1.p)
     updateSphere(part1, 0.1,aerodynamika(part1.v,c),gravity(part1.m,g))
     updateSphereCollision(part1)
-    drawSphere(part1)
+    drawSphere(part1,4)
+
     glutKeyboardFunc(keyboard)
     glFlush()
 
