@@ -59,16 +59,6 @@ part3.r = 1
 part3.col = [1, 1, 1]
 part3.quad = quadratic
 
-part4 = {}
-part4 = dd(part4)
-part4.v = [0, 0, 0]
-part4.p = [part3.p[0], part3.p[1], part3.p[2] - 1.5 ]
-part4.m = 10
-part4.r = 1
-part4.col = [1, 1, 1]
-part4.quad = quadratic
-
-
 colors = np.array(
     [[1, 0, 0],
      [0, 1, 0],
@@ -110,35 +100,21 @@ def rotejszyn(part, mousex, mousey):
     glTranslatef(part.p[0], part.p[1], part.p[2])
     glRotatef(mousex, 0, 0.5, 0)
     glTranslatef(-part.p[0], -part.p[1], -part.p[2])
-xdd=0
+
 def hitAnimejszyn(part):
-    global xdd,metin2
     if metin2%2 == 0:
-        glTranslatef(0, 0, -4)
-        pass
+       glTranslatef(0, 0, -4)
     else:
-        glTranslatef(0, 0, 1)
-        xdd+=0.1
-        if xdd>2.5:
-            xdd = 0
-            metin2 += 1
-    return xdd
+        glTranslatef(0, 0, 0)
 
 
 def kijekPrawdy(part, mousex, mousey):
-
-
     glLoadIdentity()
     rotejszyn(part, mousex, mousey)
-    #rotejszyn(part4, mousex, mousey)
-
-    x=hitAnimejszyn(part4)
+    hitAnimejszyn(part)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-    glTranslatef(part4.p[0], part4.p[1], part4.p[2] - 1.5 + x)
-    gluSphere(part4.quad, 0.3, 16, 16)
-    part4.p[0]=part3.p[0]
-    part4.p[1]=part3.p[1]
-    part4.p[2]=part3.p[2] - 3.4 + x
+    glTranslatef(part.p[0], part.p[1], part.p[2] - 1.5)
+    gluSphere(part.quad, 0.3, 16, 16)
 
 
     glLoadIdentity()
@@ -345,7 +321,7 @@ def colisionOvO(p1, p2):
         p1.v = u1
         p2.v = u2
 
-        print('xd')
+
     else:
         pass
 
@@ -367,10 +343,10 @@ rot_cam=0
 cam_r=20
 import random
 
-metin2 = 2
+metin2 = 1
 def keyboard(bkey, x, y):
     key = bkey.decode("utf-8")
-    global k, rot_cam, cam_r, part1, c, g,metin2
+    global k, rot_cam, cam_r, part1, c, g,metin2,mousex,mousey
     if key == 'k':
         k += 0.05
     if key == 'l':
@@ -404,6 +380,12 @@ def keyboard(bkey, x, y):
         g -= 0.001
     if key == '\x20':
         metin2 += 1
+        if metin2 %2==1:
+            print(mousex,mousey)
+            mousex,mousey=abs(mousex),abs(mousey)
+            predkosc=np.array([-cos(np.radians(mousex-45)),0,sin(np.radians(mousey+135    ))])
+            part3.v=predkosc*20
+
 
 
 
@@ -435,9 +417,7 @@ def display():
     updateSphereCollision(part2)
     updateSphere(part3, 0.1, aerodynamika(part3.v, c), gravity(part3.m, g))
     updateSphereCollision(part3)
-
     colisionOvO(part1, part2)
-    colisionOvO(part3, part4)
     colisionOvO(part2, part3)
     colisionOvO(part1, part3)
     kijekPrawdy(part3, mousex, mousey)
