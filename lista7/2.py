@@ -1,6 +1,6 @@
 #LISTA 7
 #ZAD 2
-#1.1...NOT YET
+#1.1...DONE.... nie wiadomo czemu poziom podłogi się podnosi :}
 #1.2...DONE
 
 
@@ -27,7 +27,7 @@ class dd(dict):
 
 part1 = {}
 part1 = dd(part1)
-part1.v = [3, 0, 1]
+part1.v = [3, 15, 1]
 part1.p = [-5, 2, 3]
 part1.m = 10
 part1.r = 1
@@ -101,10 +101,10 @@ def drawScianki():
 
 
 # ruch sfery
-def updateSphere(part, dt,aero):
+def updateSphere(part, dt,aero,graw):
     # tutaj trzeba dodać obsługę sił, w tym grawitacji
     part.v[0]=part.v[0]+aero[0]
-    part.v[1] = part.v[1] + aero[1]
+    part.v[1] = part.v[1] + aero[1] - graw
     part.v[2] = part.v[2] + aero[2]
     part.p[0] += dt * part.v[0]
     part.p[1] += dt * part.v[1]
@@ -162,6 +162,9 @@ def aerodynamika(v,c):
     opor.tolist()
     return opor
 
+def gravity(m,g):
+    grawitacja=m*g
+    return grawitacja
 
 # def grawitacja():
 
@@ -174,12 +177,13 @@ def cupdate():
         return False
     tick = ltime
     return True
-k=1
+k=0.94
 c=0.005
+g=0.005
 import random
 def keyboard(bkey,x,y):
     key = bkey.decode("utf-8")
-    global k,eye, orient, up,part1,c
+    global k,eye, orient, up,part1,c,g
     if key == 'k':
         k+=0.05
     if key=='l':
@@ -230,19 +234,21 @@ def keyboard(bkey,x,y):
         up = np.matmul(rot, np.array([0, 1, 0]));
         up = np.matmul(inverse, up);
     if key == 'y':
-        part1.v[random.randint(0,2)]+=5
-    if key=='u':
-        part1.v[random.randint(0, 2)] -= 0.5
+        part1.v[random.randint(0,2)]+=15
     if key=='c':
         c+=0.001
     if key=='x':
         c-=0.001
+    if key=='g':
+        g+=0.001
+    if key=='h':
+        g-=0.001
 # pętla wyświetlająca
 def display():
     if not cupdate():
         return
-    global part1,k,eye,orient,up,c
-    print(c)
+    global part1,k,eye,orient,up,c,g
+    print("współczynnik aerodynamiczny:", c)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
@@ -254,8 +260,9 @@ def display():
     drawScianki()
     drawFloor()
     checkSphereToSciankiCollision(part1,k)
-    print(k)
-    updateSphere(part1, 0.1,aerodynamika(part1.v,c))
+    print("współczynnik sprężystości: ", k)
+    print("siła grawitacji: ",g)
+    updateSphere(part1, 0.1,aerodynamika(part1.v,c),gravity(part1.m,g))
     updateSphereCollision(part1)
     drawSphere(part1)
     glutKeyboardFunc(keyboard)
