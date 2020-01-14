@@ -101,11 +101,10 @@ def drawScianki():
 
 
 # ruch sfery
-def updateSphere(part, dt,aero,graw):
+def updateSphere(part, dt,aero):
     # tutaj trzeba dodać obsługę sił, w tym grawitacji
-    print(part.r)
-    part.v[0]=part.v[0]+aero[0]
-    part.v[1] = part.v[1] + aero[1] - graw
+    part.v[0] = part.v[0] + aero[0]
+    part.v[1] = part.v[1] + aero[1]
     part.v[2] = part.v[2] + aero[2]
     part.p[0] += dt * part.v[0]
     part.p[1] += dt * part.v[1]
@@ -137,6 +136,8 @@ def checkSphereToSciankiCollision(part, k):
         part.p[2] = -part.r - 7
         part.v[2] = - part.v[2] * k
 
+def graw(h,a):
+    return h*a
 
 # sprawdzenie czy doszło do kolizji
 def checkSphereToFloorCollision(part):
@@ -161,20 +162,61 @@ def updateSphereCollision(part):
 
 
 
-def aerodynamika(v,c):
+def aerodynamika(v,c,graw,g):
     v = np.array(v)
     vnorm=v/np.linalg.norm(v)
     opor=v@v*c*vnorm*-1/2
     opor.tolist()
+    opor[1]-=graw(0.1,opor[1],g)
     return opor
+
+def aero(p,c,graw,g):
+    x=runge2(0.1,f,p,c)
+    y=runge3(0.1,f,p,c)-graw(0.1,runge3(0.1,f,p,c),g)
+    z=runge4(0.1,f,p,c)
+    vk=[x,y,z]
+    print(vk)
+    return vk
+
+def f(x,y,z,m,c):
+    vz=z/(np.sqrt(x**2+y**2+z**2))
+    return 1/m*(np.sqrt(x**2+y**2+z**2)*c*(-1/2)*vz)
+
+def runge2(h,f,p,c):
+    k1=h*f(p.v[0],p.v[1],p.v[2],p.m,c)
+    k2=h*f(p.v[0]+k1/2,p.v[1],p.v[2],p.m,c)
+    k3=h*f(p.v[0]+k2/2,p.v[1],p.v[2],p.m,c)
+    k4=h*f(p.v[0]+k3,p.v[1],p.v[2],p.m,c)
+    return f(p.v[0],p.v[1],p.v[2],p.m,c) +1/6*(k1+2*k2+2*k3+k4)
+
+def runge3(h,f,p,c):
+    k1=h*f(p.v[0],p.v[1],p.v[2],p.m,c)
+    k2=h*f(p.v[0],p.v[1]+k1/2,p.v[2],p.m,c)
+    k3=h*f(p.v[0],p.v[1]+k2/2,p.v[2],p.m,c)
+    k4=h*f(p.v[0],p.v[1]+k3,p.v[2],p.m,c)
+    return f(p.v[0],p.v[1],p.v[2],p.m,c) +1/6*(k1+2*k2+2*k3+k4)
+
+def runge4(h,f,p,c):
+    k1=h*f(p.v[0],p.v[1],p.v[2],p.m,c)
+    k2=h*f(p.v[0],p.v[1],p.v[2]+k1/2,p.m,c)
+    k3=h*f(p.v[0],p.v[1],p.v[2]+k2/2,p.m,c)
+    k4=h*f(p.v[0],p.v[1],p.v[2]+k3,p.m,c)
+    return f(p.v[0],p.v[1],p.v[2],p.m,c) +1/6*(k1+2*k2+2*k3+k4)
+
+
+print(runge2(0.1,f,part1,0.02))
+
 
 def gravity(m,g):
     grawitacja=m*g
     return grawitacja
 
-# def grawitacja():
-
-
+def runge(h,x,a):
+    k1=h*x+a
+    k2=h*(x+k1/2+a)
+    k3=h*(x+k2/2+a)
+    k4=h*(x+k3+a)
+    return x+1/6*(k1+2*k2+2*k3+k4)
 # wymuszenie częstotliwości odświeżania
 def cupdate():
     global tick
@@ -183,11 +225,12 @@ def cupdate():
         return False
     tick = ltime
     return True
+
 k=0.94
-c=0.005
-g=0.1
+c=8
+g=9.81
 rot_cam=0
-cam_r=15
+cam_r=10
 import random
 def keyboard(bkey,x,y):
     key = bkey.decode("utf-8")
@@ -210,13 +253,13 @@ def keyboard(bkey,x,y):
         else:
             part1.v[2]+=15
     if key=='c':
-        c+=0.001
+        c+=0.5
     if key=='x':
-        c-=0.001
+        c-=0.5
     if key=='g':
-        g+=0.001
+        g+=0.5
     if key=='h':
-        g-=0.001
+        g-=0.5
     if key=='u':
         part1.v[1]+=10
 # pętla wyświetlająca
@@ -224,7 +267,7 @@ def display():
     if not cupdate():
         return
     global part1,k,rot_cam,cam_r,c,g
-    #print("współczynnik aerodynamiczny:", c)
+    print("współczynnik aerodynamiczny:", c)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
@@ -237,10 +280,10 @@ def display():
     drawScianki()
     drawFloor()
     checkSphereToSciankiCollision(part1,k)
-    #print("współczynnik sprężystości: ", k)
-    #print("siła grawitacji: ",g)
-    print(part1.p)
-    updateSphere(part1, 0.1,aerodynamika(part1.v,c),gravity(part1.m,g))
+    print("współczynnik sprężystości: ", k)
+    print("siła grawitacji: ",g)
+
+    updateSphere(part1, 0.1,aero(part1,c,runge,g))
     updateSphereCollision(part1)
     drawSphere(part1)
     glutKeyboardFunc(keyboard)
