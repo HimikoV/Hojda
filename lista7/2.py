@@ -136,8 +136,6 @@ def checkSphereToSciankiCollision(part, k):
         part.p[2] = -part.r - 7
         part.v[2] = - part.v[2] * k
 
-def graw(h,a):
-    return h*a
 
 # sprawdzenie czy doszło do kolizji
 def checkSphereToFloorCollision(part):
@@ -161,27 +159,23 @@ def updateSphereCollision(part):
             part.v[1] = - part.v[1]
 
 
-
-def aerodynamika(v,c,graw,g):
-    v = np.array(v)
-    vnorm=v/np.linalg.norm(v)
-    opor=v@v*c*vnorm*-1/2
-    opor.tolist()
-    opor[1]-=graw(0.1,opor[1],g)
-    return opor
-
 def aero(p,c,graw,g):
-    x=runge2(0.1,f,p,c)
-    y=runge3(0.1,f,p,c)-graw(0.1,runge3(0.1,f,p,c),g)
-    z=runge4(0.1,f,p,c)
+    x=runge2(0.1,fx,p,c)
+    y=runge3(0.1,fy,p,c)+graw(0.1,runge3(0.1,fy,p,c),g)
+    z=runge4(0.1,fz,p,c)
     vk=[x,y,z]
     print(vk)
     return vk
 
-def f(x,y,z,m,c):
+def fz(x,y,z,m,c):
     vz=z/(np.sqrt(x**2+y**2+z**2))
     return 1/m*(np.sqrt(x**2+y**2+z**2)*c*(-1/2)*vz)
-
+def fx(x,y,z,m,c):
+    vx=x/(np.sqrt(x**2+y**2+z**2))
+    return 1/m*(np.sqrt(x**2+y**2+z**2)*c*(-1/2)*vx)
+def fy(x,y,z,m,c):
+    vy=y/(np.sqrt(x**2+y**2+z**2))
+    return 1/m*(np.sqrt(x**2+y**2+z**2)*c*(-1/2)*vy)
 def runge2(h,f,p,c):
     k1=h*f(p.v[0],p.v[1],p.v[2],p.m,c)
     k2=h*f(p.v[0]+k1/2,p.v[1],p.v[2],p.m,c)
@@ -204,13 +198,6 @@ def runge4(h,f,p,c):
     return f(p.v[0],p.v[1],p.v[2],p.m,c) +1/6*(k1+2*k2+2*k3+k4)
 
 
-print(runge2(0.1,f,part1,0.02))
-
-
-def gravity(m,g):
-    grawitacja=m*g
-    return grawitacja
-
 def runge(h,x,a):
     k1=h*x+a
     k2=h*(x+k1/2+a)
@@ -227,8 +214,8 @@ def cupdate():
     return True
 
 k=0.94
-c=8
-g=9.81
+c=1
+g=-10
 rot_cam=0
 cam_r=10
 import random
