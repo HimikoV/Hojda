@@ -34,7 +34,7 @@ quadratic = gluNewQuadric()
 
 part1 = {}
 part1 = dd(part1)
-part1.v = [-5, 0, 5]
+part1.v = [0.1,0.1,0.1]
 part1.p = [2, 1, 3]
 part1.m = 10
 part1.r = 1
@@ -43,8 +43,8 @@ part1.quad = quadratic
 
 part2 = {}
 part2 = dd(part2)
-part2.v = [-3, 0, 2]
-part2.p = [-5, 1, 10]
+part2.v = [0.1,0.1,0.1]
+part2.p = [-8, 1, 10]
 part2.m = 10
 part2.r = 1
 part2.col = [1, 0, 0.5]
@@ -52,7 +52,7 @@ part2.quad = quadratic
 
 part3 = {}
 part3 = dd(part3)
-part3.v = [4, 0, 4]
+part3.v = [0.1,0.1,0.1]
 part3.p = [-5, 1, -5]
 part3.m = 10
 part3.r = 1
@@ -232,17 +232,20 @@ def drawScianki():
     glVertex3fv([-10, 0, -10])
     glEnd()
 
-
+flag_kol=0
 # ruch sfery
 def updateSphere(part, dt,aero):
     # tutaj trzeba dodać obsługę sił, w tym grawitacji
-    part.v[0] = part.v[0] + aero[0]
-    part.v[1] = part.v[1] + aero[1]
-    part.v[2] = part.v[2] + aero[2]
-    part.p[0] += dt * part.v[0]
-    part.p[1] += dt * part.v[1]
-    part.p[2] += dt * part.v[2]
-
+    global flaga_kol
+    if flag_kol==0:
+        part.v[0] = part.v[0] + aero[0]
+        part.v[1] = part.v[1] + aero[1]
+        part.v[2] = part.v[2] + aero[2]
+        part.p[0] += dt * part.v[0]
+        part.p[1] += dt * part.v[1]
+        part.p[2] += dt * part.v[2]
+    else:
+        pass
 
 
 def checkSphereToSciankiCollision(part, k):
@@ -272,32 +275,33 @@ def checkSphereToSciankiCollision(part, k):
 
 
 # sprawdzenie czy doszło do kolizji
-def checkSphereToFloorCollision(part):
+def checkSphereToFloorCollision(part,k):
     if part.p[1] - part.r < 0:
         return True
     else:
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-            part.v[1] = - part.v[1]
-
+            part.v[1] = - part.v[1]*k
+    checkSphereToSciankiCollision(part,k)
 
 # obsługa kolizji
-def updateSphereCollision(part):
-    if not checkSphereToFloorCollision(part):
+def updateSphereCollision(part,k):
+    if not checkSphereToFloorCollision(part,k):
         return
     else:
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-            part.v[1] = - part.v[1]
+            part.v[1] = - part.v[1]*k
+    checkSphereToSciankiCollision(part,k)
 
 def aero(p,c,graw,g):
     x=runge2(0.1,fx,p,c)
     y=runge3(0.1,fy,p,c)+graw(0.1,runge3(0.1,fy,p,c),g)
     z=runge4(0.1,fz,p,c)
     vk=[x,y,z]
-    print(vk)
+
     return vk
 
 def fz(x,y,z,m,c):
@@ -338,12 +342,16 @@ def runge(h,x,a):
     k4=h*(x+k3+a)
     return x+1/6*(k1+2*k2+2*k3+k4)
 
-def colisionOvO(p1, p2):
+
+def colisionOvO2(p1, p2):
+    global flag_kol
     list1 = [p1.p[0], p1.p[2]]
     list2 = [p2.p[0], p2.p[2]]
-    if np.sqrt((list1[0] - list2[0]) ** 2 + (list1[1] - list2[1]) ** 2) < 2 * part1.r:
-        p1.p[0], p2.p[2] = list1[0], list1[1]
-        p2.p[0], p2.p[2] = list2[0], list2[1]
+    odl1=(list1[0] - list2[0]) ** 2
+    odl2=(list1[1] - list2[1]) ** 2
+    if np.sqrt(odl1+odl2)< 2 * part1.r:
+        # p1.p[0], p2.p[2] = list1[0], list1[1]
+        # p2.p[0], p2.p[2] = list2[0], list2[1]
         m1, m2 = p1.r ** 2, p2.r ** 2
         M = m1 + m2
         r1, r2 = np.array(p1.p), np.array(p2.p)
@@ -353,33 +361,36 @@ def colisionOvO(p1, p2):
         u2 = v2 - 2 * m1 / M * np.dot(v2 - v1, r2 - r1) / d * (r2 - r1)
         p1.v = u1
         p2.v = u2
+        p1.p = [list1[0],p1.p[1],list1[1]]
+        p2.p = [list2[0], p2.p[1], list2[1]]
+        funkcja(p1,p2)
+        flag_kol = 1
 
 
-    else:
-        pass
 
 
 # wymuszenie częstotliwości odświeżania
 def cupdate():
     global tick
     ltime = time.clock()
-    if ltime < tick + 0.1:  # max 10 ramek / s
+    if ltime < tick + 0.03:  # max 10 ramek / s
         return False
     tick = ltime
     return True
 
 
 k=0.94
-c=1
+c=1.05
 g=-10
 rot_cam=0
 cam_r=20
 import random
-moc=25
+moc=15
 metin2 = 1
+
 def keyboard(bkey, x, y):
     key = bkey.decode("utf-8")
-    global k, rot_cam, cam_r, part1, c, g,metin2,mousex,mousey,moc
+    global k, rot_cam, cam_r, part1, c, g,metin2,mousex,mousey,moc,flag_kol
     if key == 'k':
         k += 0.05
     if key == 'l':
@@ -414,7 +425,6 @@ def keyboard(bkey, x, y):
     if key == '\x20':
         metin2 += 1
         if metin2 %2==1:
-            print(mousex,mousey)
             mousex,mousey=abs(mousex),abs(mousey)
             predkosc=np.array([-sin(np.radians(mousex-45)),0,cos(np.radians(mousex-45))])
             part3.v=predkosc*moc
@@ -424,16 +434,52 @@ def keyboard(bkey, x, y):
     if key == '-':
         moc-=1
         print(moc)
+    if key=='b':
+        flag_kol=0
 
+def funkcja(sphere0, sphere1):
+    r0sqr = sphere0.r * sphere0.r
+    r1sqr = sphere1.r * sphere1.r
 
+    distX = sphere0.p[0] - sphere1.p[0]
+    distY = sphere0.p[1] - sphere1.p[1]
+    distZ = sphere0.p[2] - sphere1.p[2]
+
+    distSqrX = distX**2
+    distSqrY = distY**2
+    distSqrZ = distZ**2
+    sqrDist = np.sqrt(distSqrX + distSqrY + distSqrZ)
+    totalRadius = sphere0.r + sphere1.r
+    dist = sqrt(sqrDist)
+    minMovement = (totalRadius - dist)
+    minMovement /= dist
+    mvmtX = distX * minMovement * 1
+    mvmtY = distY * minMovement * 1
+    mvmtZ = distZ * minMovement * 1
+
+    glLineWidth(3)
+    glColor3f(1, 0, 0)
+    glBegin(GL_LINES)
+    glVertex3f(sphere0.p[0], sphere0.p[1], sphere0.p[2])
+    glVertex3f(sphere0.p[0] + mvmtX * 5, sphere0.p[1], sphere0.p[2] + mvmtZ * 5)
+    glEnd()
+
+    print(mvmtX, mvmtY, mvmtZ)
+    glLineWidth(3)
+    glColor3f(0, 0, 1)
+    glBegin(GL_LINES)
+    glVertex3f(sphere1.p[0], sphere1.p[1], sphere1.p[2])
+    glVertex3f(sphere1.p[0] - mvmtX * 5, sphere1.p[1], sphere1.p[2] - mvmtZ * 5)
+    glEnd()
 
 
 # pętla wyświetlająca
 def display():
+
     if not cupdate():
         return
-    global part1,k,rot_cam,cam_r,c,g
-    #print("współczynnik aerodynamiczny:", c)
+    global part1,part2,part3,k,rot_cam,cam_r,c,g,iksde,ph1,ph2,ph3,flag_kol
+
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
@@ -445,26 +491,20 @@ def display():
     glLoadIdentity()
     drawScianki()
     drawFloor()
-    checkSphereToSciankiCollision(part1, k)
-    checkSphereToSciankiCollision(part2, k)
-    checkSphereToSciankiCollision(part3, k)
-    # print("współczynnik sprężystości: ", k)
-    # print("siła grawitacji: ", g)
     updateSphere(part1, 0.1,aero(part1,c,runge,g))
-    updateSphereCollision(part1)
+    updateSphereCollision(part1,k)
     updateSphere(part2, 0.1,aero(part2,c,runge,g))
-    updateSphereCollision(part2)
+    updateSphereCollision(part2,k)
     updateSphere(part3, 0.1,aero(part3,c,runge,g))
-    updateSphereCollision(part3)
-    colisionOvO(part1, part2)
-    colisionOvO(part2, part3)
-    colisionOvO(part1, part3)
+    updateSphereCollision(part3,k)
+    colisionOvO2(part1, part3)
+    colisionOvO2(part1, part2)
+    colisionOvO2(part2, part3)
     if np.round(part3.v[0] + part3.v[2]) == 0:
         kijekPrawdy(part3, mousex, mousey)
     drawSphere(part1)
     drawSphere(part2)
     drawSphere(part3)
-
     glutKeyboardFunc(keyboard)
     glFlush()
 
@@ -492,5 +532,7 @@ glEnable(GL_LIGHTING)
 glEnable(GL_COLOR_MATERIAL)
 # przygotowanie sfery
 part1.quad = gluNewQuadric()
+part2.quad = gluNewQuadric()
+part3.quad = gluNewQuadric()
 gluQuadricNormals(part1.quad, GLU_SMOOTH)
 glutMainLoop()
