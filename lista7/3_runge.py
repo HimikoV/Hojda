@@ -3,9 +3,9 @@
 # 1.1...DONE
 # 1.2...DONE
 # 1.3...DONE
-# 1.4...
-# 1.5...
-# 1.6...
+# 1.4...DONE
+# 1.5...DONE
+# 1.6...DONE
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -58,6 +58,15 @@ part3.m = 10
 part3.r = 1
 part3.col = [1, 1, 1]
 part3.quad = quadratic
+
+part4 = {}
+part4 = dd(part3)
+part4.v = [0.1,0.1,0.1]
+part4.p = [-100, 100, 100]
+part4.m = 10
+part4.r = 1
+part4.col = [0.5, 0.5, 0.5]
+part4.quad = quadratic
 
 colors = np.array(
     [[1, 0, 0],
@@ -344,14 +353,13 @@ def runge(h,x,a):
 
 
 def colisionOvO2(p1, p2):
-    global flag_kol
-    list1 = [p1.p[0], p1.p[2]]
-    list2 = [p2.p[0], p2.p[2]]
+    global flag_kol,k
+    list1 = [p1.p[0],p1.p[1], p1.p[2]]
+    list2 = [p2.p[0],p2.p[1], p2.p[2]]
     odl1=(list1[0] - list2[0]) ** 2
     odl2=(list1[1] - list2[1]) ** 2
-    if np.sqrt(odl1+odl2)< 2 * part1.r:
-        # p1.p[0], p2.p[2] = list1[0], list1[1]
-        # p2.p[0], p2.p[2] = list2[0], list2[1]
+    odl3=(list1[2] - list2[2]) ** 2
+    if np.sqrt(odl1 + odl2 + odl3) < 2.2 * part1.r:
         m1, m2 = p1.r ** 2, p2.r ** 2
         M = m1 + m2
         r1, r2 = np.array(p1.p), np.array(p2.p)
@@ -359,13 +367,13 @@ def colisionOvO2(p1, p2):
         v1, v2 = np.array(p1.v), np.array(p2.v)
         u1 = v1 - 2 * m2 / M * np.dot(v1 - v2, r1 - r2) / d * (r1 - r2)
         u2 = v2 - 2 * m1 / M * np.dot(v2 - v1, r2 - r1) / d * (r2 - r1)
-        p1.v = u1
-        p2.v = u2
-        p1.p = [list1[0],p1.p[1],list1[1]]
-        p2.p = [list2[0], p2.p[1], list2[1]]
-        funkcja(p1,p2)
+        print(u1/np.linalg.norm(u1))
+        p1.v = u1*k
+        p2.v = u2*k
         flag_kol = 1
-
+        funkcja(p1,p2)
+        p1.p[0],p1.p[1], p1.p[2] = list1[0],list1[1], list1[2]
+        p2.p[0],p2.p[1], p2.p[2] = list2[0], list2[1],list2[2]
 
 
 
@@ -373,7 +381,7 @@ def colisionOvO2(p1, p2):
 def cupdate():
     global tick
     ltime = time.clock()
-    if ltime < tick + 0.03:  # max 10 ramek / s
+    if ltime < tick + 0.1:  # max 10 ramek / s
         return False
     tick = ltime
     return True
@@ -436,6 +444,8 @@ def keyboard(bkey, x, y):
         print(moc)
     if key=='b':
         flag_kol=0
+    if key=='m':
+        part4.p=[part1.p[0],10,part1.p[2]]
 
 def funkcja(sphere0, sphere1):
     r0sqr = sphere0.r * sphere0.r
@@ -497,14 +507,20 @@ def display():
     updateSphereCollision(part2,k)
     updateSphere(part3, 0.1,aero(part3,c,runge,g))
     updateSphereCollision(part3,k)
+    updateSphere(part4, 0.1,aero(part4,c,runge,g))
+    updateSphereCollision(part4,k)
     colisionOvO2(part1, part3)
     colisionOvO2(part1, part2)
     colisionOvO2(part2, part3)
+    colisionOvO2(part1, part4)
+    colisionOvO2(part2, part4)
+    colisionOvO2(part3, part4)
     if np.round(part3.v[0] + part3.v[2]) == 0:
         kijekPrawdy(part3, mousex, mousey)
     drawSphere(part1)
     drawSphere(part2)
     drawSphere(part3)
+    drawSphere(part4)
     glutKeyboardFunc(keyboard)
     glFlush()
 
