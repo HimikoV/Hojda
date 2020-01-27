@@ -30,11 +30,12 @@ class dd(dict):
     __delattr__ = dict.__delitem__
 
 
+s = .25
 quadratic = gluNewQuadric()
 
 part1 = {}
 part1 = dd(part1)
-part1.v = [0.1,0.1,0.1]
+part1.v = [0.1, 0.1, 0.1]
 part1.p = [2, 1, 3]
 part1.m = 10
 part1.r = 1
@@ -43,7 +44,7 @@ part1.quad = quadratic
 
 part2 = {}
 part2 = dd(part2)
-part2.v = [0.1,0.1,0.1]
+part2.v = [0.1, 0.1, 0.1]
 part2.p = [-8, 1, 10]
 part2.m = 10
 part2.r = 1
@@ -52,7 +53,7 @@ part2.quad = quadratic
 
 part3 = {}
 part3 = dd(part3)
-part3.v = [0.1,0.1,0.1]
+part3.v = [0.1, 0.1, 0.1]
 part3.p = [-5, 1, -5]
 part3.m = 10
 part3.r = 1
@@ -61,7 +62,7 @@ part3.quad = quadratic
 
 part4 = {}
 part4 = dd(part3)
-part4.v = [0.1,0.1,0.1]
+part4.v = [0.1, 0.1, 0.1]
 part4.p = [-100, 100, 100]
 part4.m = 10
 part4.r = 1
@@ -110,9 +111,10 @@ def rotejszyn(part, mousex, mousey):
     glRotatef(mousex, 0, 0.5, 0)
     glTranslatef(-part.p[0], -part.p[1], -part.p[2])
 
+
 def hitAnimejszyn(part):
-    if metin2%2 == 0:
-       glTranslatef(0, 0, -4)
+    if metin2 % 2 == 0:
+        glTranslatef(0, 0, -4)
     else:
         glTranslatef(0, 0, 0)
 
@@ -125,17 +127,16 @@ def kijekPrawdy(part, mousex, mousey):
     glTranslatef(part.p[0], part.p[1], part.p[2] - 1.5)
     gluSphere(part.quad, 0.3, 16, 16)
 
-
     glLoadIdentity()
     rotejszyn(part, mousex, mousey)
     hitAnimejszyn(part)
     glColor3fv([0.3, 0.3, 0.3])
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     glBegin(GL_POLYGON)
-    glVertex3fv([part.p[0] - 0.3, part.p[1] + 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] - 0.3, part.p[1] + 0.3, part.p[2] - 1.5])
     glVertex3fv([part.p[0] - 0.3, part.p[1] + 0.3, part.p[2] - 1.5])
     glVertex3fv([part.p[0] + 0.3, part.p[1] + 0.3, part.p[2] - 1.5])
-    glVertex3fv([part.p[0] + 0.3, part.p[1] + 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] + 0.3, part.p[1] + 0.3, part.p[2] - 1.5])
     glEnd()
 
     glLoadIdentity()
@@ -144,10 +145,10 @@ def kijekPrawdy(part, mousex, mousey):
     glColor3fv([0.3, 0.3, 0.3])
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     glBegin(GL_POLYGON)
-    glVertex3fv([part.p[0] + 0.3, part.p[1] - 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] + 0.3, part.p[1] - 0.3, part.p[2] - 1.5])
     glVertex3fv([part.p[0] + 0.3, part.p[1] - 0.3, part.p[2] - 20])
     glVertex3fv([part.p[0] + 0.3, part.p[1] + 0.3, part.p[2] - 20])
-    glVertex3fv([part.p[0] + 0.3, part.p[1] + 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] + 0.3, part.p[1] + 0.3, part.p[2] - 1.5])
     glEnd()
 
     glLoadIdentity()
@@ -156,10 +157,10 @@ def kijekPrawdy(part, mousex, mousey):
     glColor3fv([0.3, 0.3, 0.3])
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     glBegin(GL_POLYGON)
-    glVertex3fv([part.p[0] - 0.3, part.p[1] - 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] - 0.3, part.p[1] - 0.3, part.p[2] - 1.5])
     glVertex3fv([part.p[0] - 0.3, part.p[1] - 0.3, part.p[2] - 20])
     glVertex3fv([part.p[0] - 0.3, part.p[1] + 0.3, part.p[2] - 20])
-    glVertex3fv([part.p[0] - 0.3, part.p[1] + 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] - 0.3, part.p[1] + 0.3, part.p[2] - 1.5])
     glEnd()
 
     glLoadIdentity()
@@ -168,10 +169,10 @@ def kijekPrawdy(part, mousex, mousey):
     glColor3fv([0.3, 0.3, 0.3])
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     glBegin(GL_POLYGON)
-    glVertex3fv([part.p[0] - 0.3, part.p[1] - 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] - 0.3, part.p[1] - 0.3, part.p[2] - 1.5])
     glVertex3fv([part.p[0] - 0.3, part.p[1] - 0.3, part.p[2] - 20])
     glVertex3fv([part.p[0] + 0.3, part.p[1] - 0.3, part.p[2] - 20])
-    glVertex3fv([part.p[0] + 0.3, part.p[1] - 0.3, part.p[2]- 1.5])
+    glVertex3fv([part.p[0] + 0.3, part.p[1] - 0.3, part.p[2] - 1.5])
     glEnd()
 
     glLoadIdentity()
@@ -185,6 +186,7 @@ def kijekPrawdy(part, mousex, mousey):
     glVertex3fv([part.p[0] + 0.3, part.p[1] + 0.3, part.p[2] - 20])
     glVertex3fv([part.p[0] + 0.3, part.p[1] - 0.3, part.p[2] - 20])
     glEnd()
+
 
 # rysowanie podłogi
 def drawFloor():
@@ -241,12 +243,15 @@ def drawScianki():
     glVertex3fv([-10, 0, -10])
     glEnd()
 
-flag_kol=0
+
+flag_kol = 0
+
+
 # ruch sfery
-def updateSphere(part, dt,aero):
+def updateSphere(part, dt, aero):
     # tutaj trzeba dodać obsługę sił, w tym grawitacji
-    global flaga_kol
-    if flag_kol==0:
+    global flag_kol
+    if flag_kol == 0:
         part.v[0] = part.v[0] + aero[0]
         part.v[1] = part.v[1] + aero[1]
         part.v[2] = part.v[2] + aero[2]
@@ -284,97 +289,176 @@ def checkSphereToSciankiCollision(part, k):
 
 
 # sprawdzenie czy doszło do kolizji
-def checkSphereToFloorCollision(part,k):
+def checkSphereToFloorCollision(part, k):
     if part.p[1] - part.r < 0:
         return True
     else:
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-            part.v[1] = - part.v[1]*k
-    checkSphereToSciankiCollision(part,k)
+            part.v[1] = - part.v[1] * k
+    checkSphereToSciankiCollision(part, k)
+
 
 # obsługa kolizji
-def updateSphereCollision(part,k):
-    if not checkSphereToFloorCollision(part,k):
+def updateSphereCollision(part, k):
+    if not checkSphereToFloorCollision(part, k):
         return
     else:
         # jeśli sfera zachodzi pod podłogę, to podnieś ją
         if part.p[1] - part.r < 0:
             part.p[1] = part.r
-            part.v[1] = - part.v[1]*k
-    checkSphereToSciankiCollision(part,k)
+            part.v[1] = - part.v[1] * k
+    checkSphereToSciankiCollision(part, k)
 
-def aero(p,c,graw,g):
-    x=runge2(0.1,fx,p,c)
-    y=runge3(0.1,fy,p,c)+graw(0.1,runge3(0.1,fy,p,c),g)
-    z=runge4(0.1,fz,p,c)
-    vk=[x,y,z]
+
+def aero(p, c, graw, g):
+    x = runge2(0.1, fx, p, c)
+    y = runge3(0.1, fy, p, c) + graw(0.1, runge3(0.1, fy, p, c), g)
+    z = runge4(0.1, fz, p, c)
+    vk = [x, y, z]
 
     return vk
 
-def fz(x,y,z,m,c):
-    vz=z/(np.sqrt(x**2+y**2+z**2))
-    return 1/m*(np.sqrt(x**2+y**2+z**2)*c*(-1/2)*vz)
-def fx(x,y,z,m,c):
-    vx=x/(np.sqrt(x**2+y**2+z**2))
-    return 1/m*(np.sqrt(x**2+y**2+z**2)*c*(-1/2)*vx)
-def fy(x,y,z,m,c):
-    vy=y/(np.sqrt(x**2+y**2+z**2))
-    return 1/m*(np.sqrt(x**2+y**2+z**2)*c*(-1/2)*vy)
-def runge2(h,f,p,c):
-    k1=h*f(p.v[0],p.v[1],p.v[2],p.m,c)
-    k2=h*f(p.v[0]+k1/2,p.v[1],p.v[2],p.m,c)
-    k3=h*f(p.v[0]+k2/2,p.v[1],p.v[2],p.m,c)
-    k4=h*f(p.v[0]+k3,p.v[1],p.v[2],p.m,c)
-    return f(p.v[0],p.v[1],p.v[2],p.m,c) +1/6*(k1+2*k2+2*k3+k4)
 
-def runge3(h,f,p,c):
-    k1=h*f(p.v[0],p.v[1],p.v[2],p.m,c)
-    k2=h*f(p.v[0],p.v[1]+k1/2,p.v[2],p.m,c)
-    k3=h*f(p.v[0],p.v[1]+k2/2,p.v[2],p.m,c)
-    k4=h*f(p.v[0],p.v[1]+k3,p.v[2],p.m,c)
-    return f(p.v[0],p.v[1],p.v[2],p.m,c) +1/6*(k1+2*k2+2*k3+k4)
-
-def runge4(h,f,p,c):
-    k1=h*f(p.v[0],p.v[1],p.v[2],p.m,c)
-    k2=h*f(p.v[0],p.v[1],p.v[2]+k1/2,p.m,c)
-    k3=h*f(p.v[0],p.v[1],p.v[2]+k2/2,p.m,c)
-    k4=h*f(p.v[0],p.v[1],p.v[2]+k3,p.m,c)
-    return f(p.v[0],p.v[1],p.v[2],p.m,c) +1/6*(k1+2*k2+2*k3+k4)
+def fz(x, y, z, m, c):
+    vz = z / (np.sqrt(x ** 2 + y ** 2 + z ** 2))
+    return 1 / m * (np.sqrt(x ** 2 + y ** 2 + z ** 2) * c * (-1 / 2) * vz)
 
 
-def runge(h,x,a):
-    k1=h*x+a
-    k2=h*(x+k1/2+a)
-    k3=h*(x+k2/2+a)
-    k4=h*(x+k3+a)
-    return x+1/6*(k1+2*k2+2*k3+k4)
+def fx(x, y, z, m, c):
+    vx = x / (np.sqrt(x ** 2 + y ** 2 + z ** 2))
+    return 1 / m * (np.sqrt(x ** 2 + y ** 2 + z ** 2) * c * (-1 / 2) * vx)
 
 
-def colisionOvO2(p1, p2):
-    global flag_kol,k
-    list1 = [p1.p[0],p1.p[1], p1.p[2]]
-    list2 = [p2.p[0],p2.p[1], p2.p[2]]
-    odl1=(list1[0] - list2[0]) ** 2
-    odl2=(list1[1] - list2[1]) ** 2
-    odl3=(list1[2] - list2[2]) ** 2
-    if np.sqrt(odl1 + odl2 + odl3) < 2.2 * part1.r:
-        m1, m2 = p1.r ** 2, p2.r ** 2
-        M = m1 + m2
-        r1, r2 = np.array(p1.p), np.array(p2.p)
-        d = np.linalg.norm(r1 - r2) ** 2
-        v1, v2 = np.array(p1.v), np.array(p2.v)
-        u1 = v1 - 2 * m2 / M * np.dot(v1 - v2, r1 - r2) / d * (r1 - r2)
-        u2 = v2 - 2 * m1 / M * np.dot(v2 - v1, r2 - r1) / d * (r2 - r1)
-        print(u1/np.linalg.norm(u1))
-        p1.v = u1*k
-        p2.v = u2*k
+def fy(x, y, z, m, c):
+    vy = y / (np.sqrt(x ** 2 + y ** 2 + z ** 2))
+    return 1 / m * (np.sqrt(x ** 2 + y ** 2 + z ** 2) * c * (-1 / 2) * vy)
+
+
+def runge2(h, f, p, c):
+    k1 = h * f(p.v[0], p.v[1], p.v[2], p.m, c)
+    k2 = h * f(p.v[0] + k1 / 2, p.v[1], p.v[2], p.m, c)
+    k3 = h * f(p.v[0] + k2 / 2, p.v[1], p.v[2], p.m, c)
+    k4 = h * f(p.v[0] + k3, p.v[1], p.v[2], p.m, c)
+    return f(p.v[0], p.v[1], p.v[2], p.m, c) + 1 / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+
+
+def runge3(h, f, p, c):
+    k1 = h * f(p.v[0], p.v[1], p.v[2], p.m, c)
+    k2 = h * f(p.v[0], p.v[1] + k1 / 2, p.v[2], p.m, c)
+    k3 = h * f(p.v[0], p.v[1] + k2 / 2, p.v[2], p.m, c)
+    k4 = h * f(p.v[0], p.v[1] + k3, p.v[2], p.m, c)
+    return f(p.v[0], p.v[1], p.v[2], p.m, c) + 1 / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+
+
+def runge4(h, f, p, c):
+    k1 = h * f(p.v[0], p.v[1], p.v[2], p.m, c)
+    k2 = h * f(p.v[0], p.v[1], p.v[2] + k1 / 2, p.m, c)
+    k3 = h * f(p.v[0], p.v[1], p.v[2] + k2 / 2, p.m, c)
+    k4 = h * f(p.v[0], p.v[1], p.v[2] + k3, p.m, c)
+    return f(p.v[0], p.v[1], p.v[2], p.m, c) + 1 / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+
+
+def runge(h, x, a):
+    k1 = h * x + a
+    k2 = h * (x + k1 / 2 + a)
+    k3 = h * (x + k2 / 2 + a)
+    k4 = h * (x + k3 + a)
+    return x + 1 / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+
+
+def checkBalltoBallCollison(ball1, ball2):
+    p_dist = np.sqrt((ball1.p[0] - ball2.p[0]) ** 2 + (ball1.p[1] - ball2.p[1]) ** 2 +
+                     (ball1.p[2] - ball2.p[2]) ** 2)
+    if p_dist < (ball1.r + ball2.r):
+        return True
+
+
+def changeBase(w, n, t, k, tobase):
+    M = np.array([[n[0], n[1], n[2]],
+                  [t[0], t[1], t[2]],
+                  [k[0], k[1], k[2]]])
+    if tobase == 'ntk':
+        b = M @ w
+    else:
+        b = np.linalg.inv(M) @ w
+    return b
+
+
+def colisionOvO2(ball1, ball2):
+    global flag_kol
+    if not checkBalltoBallCollison(ball1, ball2):
+        return
+    else:
+        # wyznaczamy nową bazę
+        collision_point = np.array([(ball1.p[0] + ball2.p[0]) / 2, (ball1.p[1] + ball2.p[1]) / 2,
+                                    (ball1.p[2] + ball2.p[2]) / 2])
+        n = collision_point / np.linalg.norm(collision_point)
+        check_n = np.dot((np.array(ball1.v) - np.array(ball2.v)), n)
+        if check_n > 0:
+            n = -n
+
+        if abs(n[0]) <= abs(n[1]) and abs(n[0]) <= abs(n[2]):
+            p = np.array([0, n[2], -n[1]])
+        elif abs(n[1]) <= abs(n[0]) and abs(n[1]) <= abs(n[2]):
+            p = np.array([-n[2], 0, n[0]])
+        elif abs(n[2]) <= abs(n[0]) and abs(n[2]) <= abs(n[1]):
+            p = np.array([n[1], -n[0], 0])
+        t = p / np.linalg.norm(p)
+        k = np.cross(n, t)
+
+        # przechodzimy na nową bazę
+
+        u1 = changeBase(np.array(ball1.v), n, t, k, 'ntk')
+        u2 = changeBase(np.array(ball2.v), n, t, k, 'ntk')
+
+        # liczymy impulsy
+        In = (ball1.m * ball2.m * (u2[0] - u1[0]) * (1 - s)) / (ball1.m + ball2.m)
+        It = (ball1.m * ball2.m * (u2[1] - u1[1])) / (ball1.m + ball2.m)
+        Ik = (ball1.m * ball2.m * (u2[2] - u1[2])) / (ball1.m + ball2.m)
+
+        # liczymy prędkości po kolizji
+        v1_n = (-In + ball1.m * u1[0]) / ball1.m
+        v2_n = (In + ball2.m * u2[0]) / ball2.m
+        v1_t = (-It + ball1.m * u1[1]) / ball1.m
+        v2_t = (It + ball2.m * u2[1]) / ball2.m
+        v1_k = (-Ik + ball1.m * u1[2]) / ball1.m
+        v2_k = (Ik + ball2.m * u2[2]) / ball2.m
+        v1_ntk = np.array([v1_n, v1_t, v1_k])
+        v2_ntk = np.array([v2_n, v2_t, v2_k])
+
+        v1 = changeBase(v1_ntk, n, t, k, 'xyz')
+        v2 = changeBase(v2_ntk, n, t, k, 'xyz')
+        if flag_kol == 0:
+            ball2.v = [v1[0], v1[1], v1[2]]
+            ball1.v = [v2[0], v2[1], v2[2]]
         flag_kol = 1
-        funkcja(p1,p2)
-        p1.p[0],p1.p[1], p1.p[2] = list1[0],list1[1], list1[2]
-        p2.p[0],p2.p[1], p2.p[2] = list2[0], list2[1],list2[2]
+        funkcja(ball1, ball2)
 
+
+# def colisionOvO2(p1, p2):
+#     global flag_kol
+#     list1 = [p1.p[0],p1.p[1], p1.p[2]]
+#     list2 = [p2.p[0],p2.p[1], p2.p[2]]
+#     odl1=(list1[0] - list2[0]) ** 2
+#     odl2=(list1[1] - list2[1]) ** 2
+#     odl3=(list1[2] - list2[2]) ** 2
+#     if np.sqrt(odl1 + odl2 + odl3) < 2.2 * part1.r:
+#         m1, m2 = p1.r ** 2, p2.r ** 2
+#         M = m1 + m2
+#         r1, r2 = np.array(p1.p), np.array(p2.p)
+#         d = np.linalg.norm(r1 - r2) ** 2
+#         v1, v2 = np.array(p1.v), np.array(p2.v)
+#         u1 = v1 - 2 * m2 / M * np.dot(v1 - v2, r1 - r2) / d * (r1 - r2)
+#         u2 = v2 - 2 * m1 / M * np.dot(v2 - v1, r2 - r1) / d * (r2 - r1)
+#         print(u1/np.linalg.norm(u1))
+#         p1.v = u1
+#         p2.v = u2
+#         flag_kol = 1
+#         funkcja(p1,p2)
+#         p1.p[0],p1.p[1], p1.p[2] = list1[0],list1[1], list1[2]
+#         p2.p[0],p2.p[1], p2.p[2] = list2[0], list2[1],list2[2]
 
 
 # wymuszenie częstotliwości odświeżania
@@ -387,18 +471,20 @@ def cupdate():
     return True
 
 
-k=0.94
-c=1.05
-g=-10
-rot_cam=0
-cam_r=20
+k = 0.94
+c = 1.05
+g = -10
+rot_cam = 0
+cam_r = 20
 import random
-moc=15
+
+moc = 15
 metin2 = 1
+
 
 def keyboard(bkey, x, y):
     key = bkey.decode("utf-8")
-    global k, rot_cam, cam_r, part1, c, g,metin2,mousex,mousey,moc,flag_kol
+    global k, rot_cam, cam_r, part1, c, g, metin2, mousex, mousey, moc, flag_kol
     if key == 'k':
         k += 0.05
     if key == 'l':
@@ -432,83 +518,113 @@ def keyboard(bkey, x, y):
         g -= 0.001
     if key == '\x20':
         metin2 += 1
-        if metin2 %2==1:
-            mousex,mousey=abs(mousex),abs(mousey)
-            predkosc=np.array([-sin(np.radians(mousex-45)),0,cos(np.radians(mousex-45))])
-            part3.v=predkosc*moc
+        if metin2 % 2 == 1:
+            mousex, mousey = abs(mousex), abs(mousey)
+            predkosc = np.array([-sin(np.radians(mousex - 45)), 0, cos(np.radians(mousex - 45))])
+            part3.v = predkosc * moc
     if key == '+':
-        moc+=1
+        moc += 1
         print(moc)
     if key == '-':
-        moc-=1
+        moc -= 1
         print(moc)
-    if key=='b':
-        flag_kol=0
-    if key=='m':
-        part4.p=[part1.p[0],10,part1.p[2]]
+    if key == 'b':
+        flag_kol = 0
+    if key == 'm':
+        part4.p = [part1.p[0], 10, part1.p[2]]
 
-def funkcja(sphere0, sphere1):
-    r0sqr = sphere0.r * sphere0.r
-    r1sqr = sphere1.r * sphere1.r
 
-    distX = sphere0.p[0] - sphere1.p[0]
-    distY = sphere0.p[1] - sphere1.p[1]
-    distZ = sphere0.p[2] - sphere1.p[2]
+def funkcja2(p1, p2):
+    collssion = np.array([(p1.p[0] + p2.p[0]) / 2, (p1.p[1] + p2.p[1]) / 2, (p1.p[2] + p2.p[2]) / 2])
 
-    distSqrX = distX**2
-    distSqrY = distY**2
-    distSqrZ = distZ**2
-    sqrDist = np.sqrt(distSqrX + distSqrY + distSqrZ)
-    totalRadius = sphere0.r + sphere1.r
-    dist = sqrt(sqrDist)
-    minMovement = (totalRadius - dist)
-    minMovement /= dist
-    mvmtX = distX * minMovement * 1
-    mvmtY = distY * minMovement * 1
-    mvmtZ = distZ * minMovement * 1
+    n = collssion / np.linalg.norm(collssion)
+    check_n = np.dot((np.array(p1.v) - np.array(p2.v)), n)
+    if check_n > 0:
+        n = -n
+
+    if abs(n[0]) <= abs(n[1]) and abs(n[0]) <= abs(n[2]):
+        p = np.array([0, n[2], -n[1]])
+    elif abs(n[1]) <= abs(n[0]) and abs(n[1]) <= abs(n[2]):
+        p = np.array([-n[2], 0, n[0]])
+    elif abs(n[2]) <= abs(n[0]) and abs(n[2]) <= abs(n[1]):
+        p = np.array([n[1], -n[0], 0])
+    t = p / np.linalg.norm(p)
+    k = np.cross(n, t)
+
+    glBegin(GL_LINES)
+    glVertex3f(collssion[0], collssion[1], collssion[2])
+    glVertex3f(collssion[0] + n[0], collssion[1] + n[1], collssion[2] + n[2])
+    glVertex3f(collssion[0], collssion[1], collssion[2])
+    glVertex3f(collssion[0] + t[0], collssion[1] + t[1], collssion[2] + t[2])
+    glVertex3f(collssion[0], collssion[1], collssion[2])
+    glVertex3f(collssion[0] + k[0], collssion[1] + k[1], collssion[2] + k[2])
+    glEnd()
+
+
+def funkcja(p1, p2):
+    collssion = np.array([(p1.p[0] + p2.p[0]) / 2, (p1.p[1] + p2.p[1]) / 2, (p1.p[2] + p2.p[2]) / 2])
+
+    n = collssion / np.linalg.norm(collssion)
+    check_n = np.dot((np.array(p1.v) - np.array(p2.v)), n)
+    if check_n > 0:
+        n = -n
+
+    if abs(n[0]) <= abs(n[1]) and abs(n[0]) <= abs(n[2]):
+        p = np.array([0, n[2], -n[1]])
+    elif abs(n[1]) <= abs(n[0]) and abs(n[1]) <= abs(n[2]):
+        p = np.array([-n[2], 0, n[0]])
+    elif abs(n[2]) <= abs(n[0]) and abs(n[2]) <= abs(n[1]):
+        p = np.array([n[1], -n[0], 0])
+    t = p / np.linalg.norm(p)
+    k = np.cross(n, t)
 
     glLineWidth(3)
     glColor3f(1, 0, 0)
     glBegin(GL_LINES)
-    glVertex3f(sphere0.p[0], sphere0.p[1], sphere0.p[2])
-    glVertex3f(sphere0.p[0] + mvmtX * 5, sphere0.p[1], sphere0.p[2] + mvmtZ * 5)
+    glVertex3f(collssion[0], collssion[1], collssion[2])
+    glVertex3f(collssion[0] + n[0] * 10, collssion[1] + n[1] * 10, collssion[2] + n[2] * 10)
     glEnd()
 
-    print(mvmtX, mvmtY, mvmtZ)
+    glLineWidth(3)
+    glColor3f(0, 1, 0)
+    glBegin(GL_LINES)
+    glVertex3f(collssion[0], collssion[1], collssion[2])
+    glVertex3f(collssion[0] + t[0] * 10, collssion[1] + t[1] * 10, collssion[2] + t[2] * 10)
+    glEnd()
+
     glLineWidth(3)
     glColor3f(0, 0, 1)
     glBegin(GL_LINES)
-    glVertex3f(sphere1.p[0], sphere1.p[1], sphere1.p[2])
-    glVertex3f(sphere1.p[0] - mvmtX * 5, sphere1.p[1], sphere1.p[2] - mvmtZ * 5)
+    glVertex3f(collssion[0], collssion[1], collssion[2])
+    glVertex3f(collssion[0] + k[0] * 10, collssion[1] + k[1] * 10, collssion[2] + k[2] * 10)
     glEnd()
 
 
 # pętla wyświetlająca
 def display():
-
     if not cupdate():
         return
-    global part1,part2,part3,k,rot_cam,cam_r,c,g,iksde,ph1,ph2,ph3,flag_kol
+    global part1, part2, part3, k, rot_cam, cam_r, c, g, iksde, ph1, ph2, ph3, flag_kol
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     glFrustum(-1, 1, -1, 1, 1, 100)
-    camx=sin(np.radians(rot_cam))*cam_r
-    camz=cos(np.radians(rot_cam))*cam_r
-    gluLookAt(camx,12,camz,0,0,0,0,1,0)
+    camx = sin(np.radians(rot_cam)) * cam_r
+    camz = cos(np.radians(rot_cam)) * cam_r
+    gluLookAt(camx, 12, camz, 0, 0, 0, 0, 1, 0)
     glMatrixMode(GL_MODELVIEW)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     drawScianki()
     drawFloor()
-    updateSphere(part1, 0.1,aero(part1,c,runge,g))
-    updateSphereCollision(part1,k)
-    updateSphere(part2, 0.1,aero(part2,c,runge,g))
-    updateSphereCollision(part2,k)
-    updateSphere(part3, 0.1,aero(part3,c,runge,g))
-    updateSphereCollision(part3,k)
-    updateSphere(part4, 0.1,aero(part4,c,runge,g))
-    updateSphereCollision(part4,k)
+    updateSphere(part1, 0.1, aero(part1, c, runge, g))
+    updateSphereCollision(part1, k)
+    updateSphere(part2, 0.1, aero(part2, c, runge, g))
+    updateSphereCollision(part2, k)
+    updateSphere(part3, 0.1, aero(part3, c, runge, g))
+    updateSphereCollision(part3, k)
+    updateSphere(part4, 0.1, aero(part4, c, runge, g))
+    updateSphereCollision(part4, k)
     colisionOvO2(part1, part3)
     colisionOvO2(part1, part2)
     colisionOvO2(part2, part3)
